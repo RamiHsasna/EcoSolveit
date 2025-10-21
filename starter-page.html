@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Espace Utilisateur - EcoSolve</title>
+  <meta name="description" content="Accédez à votre espace personnel sur EcoSolve : consultez vos signalements, participez à des initiatives et suivez les statistiques locales.">
+  <meta name="keywords" content="EcoSolve, espace utilisateur, dashboard, mes signalements, participation citoyenne">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Adapted: Landify for EcoSolve - Starter Page
+  * Project: EcoSolve - Plateforme collaborative
+  * Updated: Oct 10 2025
+  * Author: Adapted by Grok
+  ======================================================== -->
+</head>
+
+<body class="starter-page-page">
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <h1 class="sitename">EcoSolve</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html#hero">Accueil</a></li>
+          <li><a href="index.html#about">À propos</a></li>
+          <li><a href="index.html#features">Fonctionnalités</a></li>
+          <li><a href="index.html#signalement">Signalement</a></li>
+          <li><a href="index.html#stats">Statistiques</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <a class="btn-getstarted" href="index.html#signalement">Signaler</a>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container">
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Accueil</a></li>
+            <li class="current">Espace Utilisateur</li>
+          </ol>
+        </nav>
+        <h1>Votre Dashboard Personnel</h1>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Starter Section Section -->
+    <section id="starter-section" class="starter-section section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Dashboard</span>
+        <h2>Bienvenue dans Votre Espace</h2>
+        <p>Gérez vos signalements, suivez vos participations et consultez les actualités locales</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="card">
+              <div class="card-header">
+                <h5>Mes Signalements Récents</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Titre</th>
+                        <th>Statut</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Pollution au parc</td>
+                        <td><span class="badge bg-warning">En cours</span></td>
+                        <td>10/10/2025</td>
+                        <td><a href="#" class="btn btn-sm btn-primary">Voir</a></td>
+                      </tr>
+                      <tr>
+                        <td>Déchets sur trottoir</td>
+                        <td><span class="badge bg-success">Résolu</span></td>
+                        <td>05/10/2025</td>
+                        <td><a href="#" class="btn btn-sm btn-secondary">Détails</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Mes Participations</h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Nettoyage plage
+                    <span class="badge bg-primary rounded-pill">Actif</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Réparation route
+                    <span class="badge bg-success rounded-pill">Terminé</span>
+                  </li>
+                </ul>
+                <a href="#" class="btn btn-primary w-100 mt-3">Rejoindre une Initiative</a>
+              </div>
+            </div>
+            <div class="card mt-3">
+              <div class="card-header">
+                <h5>Statistiques Personnelles</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Signalements</div>
+                  </div>
+                  <div class="col-6">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Participations</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5>Fil d'Actualité Local</h5>
+              </div>
+              <div class="card-body">
+                <div class="list-group">
+                  <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1">Nouveau problème : Déchets à la station</h6>
+                      <small>Il y a 2h</small>
+                    </div>
+                    <p class="mb-1">Besoin de volontaires pour le ramassage.</p>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1">Pollution résolue dans le quartier</h6>
+                      <small>Hier</small>
+                    </div>
+                    <p class="mb-1">Merci à tous les participants !</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Starter Section Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative dark-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-5 col-md-12 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">EcoSolve</span>
+          </a>
+          <p>Plateforme collaborative pour des villes durables. Signalement, visualisation et résolution de problèmes locaux.</p>
+          <div class="social-links d-flex mt-4">
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Liens Utiles</h4>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="index.html#about">À propos</a></li>
+            <li><a href="index.html#features">Fonctionnalités</a></li>
+            <li><a href="index.html#signalement">Signalement</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Catégories</h4>
+          <ul>
+            <li><a href="#">Pollution</a></li>
+            <li><a href="#">Nids-de-Poule</a></li>
+            <li><a href="#">Déchets</a></li>
+            <li><a href="#">Plages</a></li>
+            <li><a href="#">Autres</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+          <h4>Contact</h4>
+          <p>Paris, France</p>
+          <p></p>
+          <p>France</p>
+          <p class="mt-4"><strong>Tél:</strong> <span>+33 1 23 45 67 89</span></p>
+          <p><strong>Email:</strong> <span>contact@ecosolve.fr</span></p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">EcoSolve</strong> <span>Tous Droits Réservés</span></p>
+      <div class="credits">
+        Adapté de <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
