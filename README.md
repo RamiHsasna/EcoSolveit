@@ -7,7 +7,7 @@ Short, copy-pasteable steps to get started and avoid merge conflicts.
 1. Clone the repo
 
 ```bash
-git clone git@github.com:RamiHsasna/EcoSolve.git
+git clone https://github.com/RamiHsasna/EcoSolveit.git
 cd EcoSolve
 ```
 
@@ -65,3 +65,4 @@ Tips
 ```
 
 ```
+
