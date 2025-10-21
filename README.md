@@ -8,7 +8,7 @@ Short, copy-pasteable steps to get started and avoid merge conflicts.
 
 ```bash
 git clone https://github.com/RamiHsasna/EcoSolveit.git
-cd EcoSolve
+cd EcoSolveit
 ```
 
 2. Create a feature branch from the latest main
@@ -65,4 +65,5 @@ Tips
 ```
 
 ```
+
 
