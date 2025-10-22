@@ -5,6 +5,13 @@ require_once __DIR__ . '/../core/database.php';
 use Models\EcoEvent;
 
 class EventController {
+    private $conn;
+
+    public function __construct() {
+        $database = Database::getInstance();
+        $this->conn = $database->getConnection();
+    }
+
     public function createEvent(EcoEvent $event) {
         try {
             $data = [
@@ -29,12 +36,11 @@ class EventController {
                 :participant_limit, :status
             )";
 
-            $conn = Database::getInstance()->getConnection();
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
 
             return [
-                'id' => $conn->lastInsertId(),
+                'id' => $this->conn->lastInsertId(),
                 'event' => $data
             ];
         } catch (PDOException $e) {
@@ -42,18 +48,16 @@ class EventController {
         }
     }
 
-    public function showEvents() {
-        $conn = Database::getInstance()->getConnection();
+    public function getAllEvents() {
         $query = "SELECT * FROM eco_event ORDER BY created_at DESC";
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function delete($id) {
-        $conn = Database::getInstance()->getConnection();
+    public function deleteEvent($id) {
         $query = "DELETE FROM eco_event WHERE id = :id";
-        $stmt = $conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
