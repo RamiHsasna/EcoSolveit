@@ -1,4 +1,8 @@
 <?php
+
+echo "EventController reached";
+
+<?php
 require_once __DIR__ . '/../models/EcoEvent.php';
 require_once __DIR__ . '/../core/database.php';
 
