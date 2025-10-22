@@ -1,1019 +1,1258 @@
 <!DOCTYPE html>
 <html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+      Accueil - EcoSolve : Plateforme collaborative pour des villes durables
+    </title>
+    <meta
+      name="description"
+      content="EcoSolve permet aux citoyens de signaler et résoudre des problèmes locaux comme la pollution, les nids-de-poule ou les déchets. Participez activement à votre quartier !"
+    />
+    <meta
+      name="keywords"
+      content="EcoSolve, signalement problèmes locaux, participation citoyenne, durabilité urbaine, carte interactive"
+    />
 
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>
-    Accueil - EcoSolve : Plateforme collaborative pour des villes durables
-  </title>
-  <meta name="description"
-    content="EcoSolve permet aux citoyens de signaler et résoudre des problèmes locaux comme la pollution, les nids-de-poule ou les déchets. Participez activement à votre quartier !" />
-  <meta name="keywords"
-    content="EcoSolve, signalement problèmes locaux, participation citoyenne, durabilité urbaine, carte interactive" />
+    <!-- Favicons -->
+    <link href="assets/img/logo.png" rel="icon" />
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
 
-  <!-- Favicons -->
-  <link href="assets/img/logo.png" rel="icon" />
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect" />
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet" />
+    <!-- Vendor CSS Files -->
+    <link
+      href="assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
+    <link
+      href="assets/vendor/glightbox/css/glightbox.min.css"
+      rel="stylesheet"
+    />
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet" />
 
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet" />
+    <!-- Leaflet pour la carte interactive -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
 
-  <!-- Leaflet pour la carte interactive -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
-  <!-- =======================================================
+    <!-- =======================================================
   * Template Adapted: Landify for EcoSolve
   * Project: EcoSolve - Plateforme collaborative
   * Updated: Oct 10 2025
   * Author: Adapted by Grok
   ======================================================== -->
-</head>
+  </head>
 
-<body class="index-page">
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <!-- ICI : Le div conteneur principal – il englobe TOUT le contenu du header -->
-    <div class="container position-relative d-flex align-items-center justify-content-between">
-      <!-- Logo à gauche -->
-      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
-        <h1 class="sitename">EcoSolve</h1>
-      </a>
-
-      <!-- Menu de navigation (centré ou à droite sur desktop) -->
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="#hero" class="active">Accueil</a></li>
-          <li><a href="#about">À propos</a></li>
-          <li><a href="#features">Fonctionnalités</a></li>
-          <li><a href="#signalement">Signalement</a></li>
-          <li><a href="#participation"> Opportunités </a></li>
-
-          <li>
-            <a href="views/BackOffice/dashboard.php"> Tableau de Bord </a>
-          </li>
-
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-      <!-- Boutons à droite (S'inscrire + Notifications) -->
-      <div class="d-flex align-items-center gap-4 position-relative">
-        <a class="btn-getstarted" href="views/FrontOffice/register.php">
-          S'inscrire
+  <body class="index-page">
+    <header id="header" class="header d-flex align-items-center fixed-top">
+      <!-- ICI : Le div conteneur principal – il englobe TOUT le contenu du header -->
+      <div
+        class="container position-relative d-flex align-items-center justify-content-between"
+      >
+        <!-- Logo à gauche -->
+        <a
+          href="index.html"
+          class="logo d-flex align-items-center me-auto me-xl-0"
+        >
+          <h1 class="sitename">EcoSolve</h1>
         </a>
 
-        <!-- Bouton notification -->
-        <a href="#notifications" class="btn-notification position-relative" aria-label="Notifications" role="button">
-          <i class="bi bi-bell fs-5"></i>
-          <span class="badge bg-danger rounded-circle position-absolute top-0 end-0 translate-middle mt-n2 me-n2" style="
+        <!-- Menu de navigation (centré ou à droite sur desktop) -->
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="#hero" class="active">Accueil</a></li>
+            <li><a href="#about">À propos</a></li>
+            <li><a href="#features">Fonctionnalités</a></li>
+            <li><a href="#signalement">Signalement</a></li>
+            <li><a href="#participation"> Opportunités </a></li>
+
+            <li>
+              <a href="views/BackOffice/dashboard.php"> Tableau de Bord </a>
+            </li>
+
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <!-- Boutons à droite (Se connecter + Notifications) -->
+        <div class="d-flex align-items-center gap-4 position-relative">
+          <a class="btn-getstarted" href="views/FrontOffice/login.php">
+            Se connecter
+          </a>
+
+          <!-- Bouton notification -->
+          <a
+            href="#notifications"
+            class="btn-notification position-relative"
+            aria-label="Notifications"
+            role="button"
+          >
+            <i class="bi bi-bell fs-5"></i>
+            <span
+              class="badge bg-danger rounded-circle position-absolute top-0 end-0 translate-middle mt-n2 me-n2"
+              style="
                 font-size: 0.6em;
                 width: 18px;
                 height: 18px;
                 line-height: 1;
-              ">3</span>
-        </a>
+              "
+              >3</span
+            >
+          </a>
 
-        <!-- Boîte de notifications (dropdown) -->
-        <div id="notif-box" class="notification-dropdown">
-          <div class="notification-header">
-            <h6 class="mb-0">
-              Notifications <span class="badge bg-primary ms-2">3</span>
-            </h6>
-            <button type="button" class="btn-close btn-close-white" id="close-notif" aria-label="Fermer"></button>
+          <!-- Boîte de notifications (dropdown) -->
+          <div id="notif-box" class="notification-dropdown">
+            <div class="notification-header">
+              <h6 class="mb-0">
+                Notifications <span class="badge bg-primary ms-2">3</span>
+              </h6>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                id="close-notif"
+                aria-label="Fermer"
+              ></button>
+            </div>
+            <div class="notification-list">
+              <a href="#" class="notification-item unread">
+                <div class="notification-icon">
+                  <i class="bi bi-exclamation-triangle text-warning"></i>
+                </div>
+                <div class="notification-content">
+                  <h6 class="mb-1">Nouveau signalement de pollution</h6>
+                  <p class="mb-1 text-muted small">
+                    Rue de la Paix, quartier central
+                  </p>
+                  <small class="text-muted">Il y a 2 minutes</small>
+                </div>
+              </a>
+              <a href="#" class="notification-item unread">
+                <div class="notification-icon">
+                  <i class="bi bi-check-circle text-success"></i>
+                </div>
+                <div class="notification-content">
+                  <h6 class="mb-1">Problème résolu : Déchets ramassés</h6>
+                  <p class="mb-1 text-muted small">Par l'équipe locale</p>
+                  <small class="text-muted">Il y a 1 heure</small>
+                </div>
+              </a>
+              <a href="#" class="notification-item">
+                <div class="notification-icon">
+                  <i class="bi bi-people text-info"></i>
+                </div>
+                <div class="notification-content">
+                  <h6 class="mb-1">Nouvelle opportunité de participation</h6>
+                  <p class="mb-1 text-muted small">
+                    Nettoyage de plage ce weekend
+                  </p>
+                  <small class="text-muted">Il y a 3 heures</small>
+                </div>
+              </a>
+            </div>
+            <div class="notification-footer">
+              <a
+                href="#notifications"
+                class="text-center d-block py-2 text-muted small"
+                >Voir toutes les notifications</a
+              >
+            </div>
           </div>
-          <div class="notification-list">
-            <a href="#" class="notification-item unread">
-              <div class="notification-icon">
-                <i class="bi bi-exclamation-triangle text-warning"></i>
-              </div>
-              <div class="notification-content">
-                <h6 class="mb-1">Nouveau signalement de pollution</h6>
-                <p class="mb-1 text-muted small">
-                  Rue de la Paix, quartier central
+        </div>
+      </div>
+      <!-- FIN du div conteneur principal -->
+    </header>
+    <main class="main">
+      <!-- Hero Section -->
+      <section id="hero" class="hero section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row align-items-center">
+            <div
+              class="col-lg-6 order-2 order-lg-1"
+              data-aos="fade-right"
+              data-aos-delay="200"
+            >
+              <div class="hero-content">
+                <h1 class="hero-title">
+                  Participez à la résolution des problèmes locaux
+                </h1>
+                <p class="hero-description">
+                  EcoSolve est une plateforme collaborative qui permet aux
+                  citoyens de signaler des problèmes urbains comme la
+                  pollution,les déchets, de les visualiser sur une carte
+                  interactive et de s'impliquer dans leur résolution pour des
+                  villes plus durables.
                 </p>
-                <small class="text-muted">Il y a 2 minutes</small>
-              </div>
-            </a>
-            <a href="#" class="notification-item unread">
-              <div class="notification-icon">
-                <i class="bi bi-check-circle text-success"></i>
-              </div>
-              <div class="notification-content">
-                <h6 class="mb-1">Problème résolu : Déchets ramassés</h6>
-                <p class="mb-1 text-muted small">Par l'équipe locale</p>
-                <small class="text-muted">Il y a 1 heure</small>
-              </div>
-            </a>
-            <a href="#" class="notification-item">
-              <div class="notification-icon">
-                <i class="bi bi-people text-info"></i>
-              </div>
-              <div class="notification-content">
-                <h6 class="mb-1">Nouvelle opportunité de participation</h6>
-                <p class="mb-1 text-muted small">
-                  Nettoyage de plage ce weekend
-                </p>
-                <small class="text-muted">Il y a 3 heures</small>
-              </div>
-            </a>
-          </div>
-          <div class="notification-footer">
-            <a href="#notifications" class="text-center d-block py-2 text-muted small">Voir toutes les notifications</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- FIN du div conteneur principal -->
-  </header>
-  <main class="main">
-    <!-- Hero Section -->
-    <section id="hero" class="hero section">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row align-items-center">
-          <div class="col-lg-6 order-2 order-lg-1" data-aos="fade-right" data-aos-delay="200">
-            <div class="hero-content">
-              <h1 class="hero-title">
-                Participez à la résolution des problèmes locaux
-              </h1>
-              <p class="hero-description">
-                EcoSolve est une plateforme collaborative qui permet aux
-                citoyens de signaler des problèmes urbains comme la
-                pollution,les déchets, de les visualiser sur une carte
-                interactive et de s'impliquer dans leur résolution pour des
-                villes plus durables.
-              </p>
-              <div class="hero-actions">
-                <a href="#signalement" class="btn-primary">Signaler un Problème</a>
-                <span>
-                  <a href="#participation" class="bi bi-play-circle">Trouver une opportunité</a>
-                </span>
-              </div>
-              <div class="hero-stats">
-                <div class="stat-item">
-                  <span class="stat-number">500+</span>
-                  <span class="stat-label">Problèmes Signalés</span>
+                <div class="hero-actions">
+                  <a href="#signalement" class="btn-primary"
+                    >Signaler un Problème</a
+                  >
+                  <span>
+                    <a href="#participation" class="bi bi-play-circle"
+                      >Trouver une opportunité</a
+                    >
+                  </span>
                 </div>
-                <div class="stat-item">
-                  <span class="stat-number">85%</span>
-                  <span class="stat-label">Résolus</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">24/7</span>
-                  <span class="stat-label">Ouvert à Tous</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-6 order-1 order-lg-2" data-aos="fade-left" data-aos-delay="300">
-            <div class="hero-visual">
-              <div class="hero-image-wrapper">
-                <img src="assets/img/illustration/illustration-15.webp" class="img-fluid hero-image"
-                  alt="Carte interactive EcoSolve" />
-                <div class="floating-elements">
-                  <div class="floating-card card-1">
-                    <i class="bi bi-geo-alt"></i>
-                    <span>Localisation</span>
+                <div class="hero-stats">
+                  <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Problèmes Signalés</span>
                   </div>
-                  <div class="floating-card card-2">
-                    <i class="bi bi-people"></i>
-                    <span>Participation</span>
+                  <div class="stat-item">
+                    <span class="stat-number">85%</span>
+                    <span class="stat-label">Résolus</span>
                   </div>
-                  <div class="floating-card card-3">
-                    <i class="bi bi-check-circle"></i>
-                    <span>Résolution</span>
+                  <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Ouvert à Tous</span>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /Hero Section -->
 
-    <!-- About Section -->
-    <section id="about" class="about section">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row gy-5">
-          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
-            <div class="content-wrapper">
-              <div class="section-header">
-                <span class="section-badge">À PROPOS D'ECOSOLVE</span>
-                <h2>
-                  Renforcez la participation citoyenne pour un développement
-                  urbain durable
-                </h2>
-              </div>
-
-              <p class="lead-text">
-                EcoSolve vise à connecter les citoyens, les associations et
-                les autorités locales pour identifier et résoudre rapidement
-                les problèmes environnementaux et urbains dans votre ville ou
-                région.
-              </p>
-
-              <p class="description-text">
-                Grâce à une interface intuitive, visualisez les signalements
-                sur une carte interactive et rejoignez des initiatives
-                collectives pour un impact réel.
-              </p>
-
-              <div class="stats-grid">
-                <div class="stat-item">
-                  <div class="stat-number">3</div>
-                  <div class="stat-label">Semaines de Développement</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-number">5</div>
-                  <div class="stat-label">Développeurs</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-number">100%</div>
-                  <div class="stat-label">Gratuit & Ouvert</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-number">PHP/MySQL</div>
-                  <div class="stat-label">Technologies</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
-            <div class="visual-section">
-              <div class="main-image-container">
-                <img src="assets/img/about/about-8.webp" alt="Équipe EcoSolve en action"
-                  class="img-fluid main-visual" />
-                <div class="overlay-card">
-                  <div class="card-content">
-                    <h4>Durabilité Urbaine</h4>
-                    <p>
-                      Ensemble pour des quartiers plus propres et sécurisés.
-                    </p>
-                    <div class="card-icon">
-                      <i class="bi bi-leaf"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="secondary-images">
-                <div class="row g-3">
-                  <div class="col-6">
-                    <img src="assets/img/about/about-11.webp" alt="Signalement citoyen"
-                      class="img-fluid secondary-img" />
-                  </div>
-                  <div class="col-6">
-                    <img src="assets/img/about/about-5.webp" alt="Carte collaborative"
-                      class="img-fluid secondary-img" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-5">
-          <div class="col-12" data-aos="fade-up" data-aos-delay="400">
-            <div class="features-section">
-              <div class="row gy-4">
-                <div class="col-md-4">
-                  <div class="feature-box">
-                    <div class="feature-icon">
-                      <i class="bi bi-shield-check"></i>
-                    </div>
-                    <h5>Sécurité des Données</h5>
-                    <p>
-                      Protection contre les injections SQL et validation
-                      stricte des formulaires pour une confidentialité
-                      optimale.
-                    </p>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="feature-box">
-                    <div class="feature-icon">
-                      <i class="bi bi-lightning-charge"></i>
-                    </div>
-                    <h5>Réactivité</h5>
-                    <p>
-                      Design responsive pour mobile et desktop, avec
-                      notifications en temps réel.
-                    </p>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="feature-box">
-                    <div class="feature-icon">
-                      <i class="bi bi-headset"></i>
-                    </div>
-                    <h5>Support Communautaire</h5>
-                    <p>
-                      Espace admin pour modérer et une communauté active pour
-                      l'assistance.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /About Section -->
-
-    <!-- Features Section -->
-    <section id="features" class="features section">
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Fonctionnalités</span>
-        <h2>Fonctionnalités Principales</h2>
-        <p>
-          Une plateforme intuitive pour signaler, visualiser et résoudre les
-          problèmes locaux
-        </p>
-      </div>
-      <!-- End Section Title -->
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="tabs-wrapper">
-          <ul class="nav nav-tabs" data-aos="fade-up" data-aos-delay="100">
-            <li class="nav-item">
-              <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
-                <div class="tab-icon">
-                  <i class="bi bi-geo-alt"></i>
-                </div>
-                <div class="tab-content">
-                  <h5>Carte Interactive</h5>
-                  <span>Visualisez les problèmes</span>
-                </div>
-              </a>
-            </li>
-            <!-- End tab nav item -->
-
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
-                <div class="tab-icon">
-                  <i class="bi bi-person-check"></i>
-                </div>
-                <div class="tab-content">
-                  <h5>Participation</h5>
-                  <span>Rejoignez l'action</span>
-                </div>
-              </a>
-            </li>
-            <!-- End tab nav item -->
-
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
-                <div class="tab-icon">
-                  <i class="bi bi-graph-up"></i>
-                </div>
-                <div class="tab-content">
-                  <h5>Tableau de Bord</h5>
-                  <span>Suivez l'impact</span>
-                </div>
-              </a>
-            </li>
-            <!-- End tab nav item -->
-
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-4">
-                <div class="tab-icon">
-                  <i class="bi bi-lock"></i>
-                </div>
-                <div class="tab-content">
-                  <h5>Sécurité</h5>
-                  <span>Données protégées</span>
-                </div>
-              </a>
-            </li>
-            <!-- End tab nav item -->
-          </ul>
-
-          <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
-            <div class="tab-pane fade active show" id="features-tab-1">
-              <div class="row align-items-center">
-                <div class="col-lg-5">
-                  <div class="content-wrapper">
-                    <div class="icon-badge">
+            <div
+              class="col-lg-6 order-1 order-lg-2"
+              data-aos="fade-left"
+              data-aos-delay="300"
+            >
+              <div class="hero-visual">
+                <div class="hero-image-wrapper">
+                  <img
+                    src="assets/img/illustration/illustration-15.webp"
+                    class="img-fluid hero-image"
+                    alt="Carte interactive EcoSolve"
+                  />
+                  <div class="floating-elements">
+                    <div class="floating-card card-1">
                       <i class="bi bi-geo-alt"></i>
+                      <span>Localisation</span>
                     </div>
-                    <h3>Carte Interactive</h3>
-                    <p>
-                      Affichage des problèmes sur une carte, filtrage par
-                      catégorie et zone géographique pour une navigation
-                      intuitive.
-                    </p>
-
-                    <div class="feature-grid">
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Marqueurs cliquables pour détails</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Filtres par catégorie (pollution, déchets,
-                          etc.)</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Zoom sur quartiers locaux</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Intégration GPS pour localisation</span>
-                      </div>
+                    <div class="floating-card card-2">
+                      <i class="bi bi-people"></i>
+                      <span>Participation</span>
                     </div>
-
-                    <div class="stats-row">
-                      <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Responsive</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Catégories</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">Temps Réel</div>
-                        <div class="stat-label">Mises à Jour</div>
-                      </div>
-                    </div>
-
-                    <a href="#" class="btn-primary">Découvrir la Carte <i class="bi bi-arrow-right"></i></a>
-                  </div>
-                </div>
-
-                <div class="col-lg-7">
-                  <div class="visual-content">
-                    <div class="main-image">
-                      <img src="assets/img/features/features-4.webp" alt="Carte EcoSolve" class="img-fluid" />
-                      <div class="floating-card">
-                        <i class="bi bi-map"></i>
-                        <div class="card-content">
-                          <span>Localisation</span>
-                          <strong>Précise</strong>
-                        </div>
-                      </div>
+                    <div class="floating-card card-3">
+                      <i class="bi bi-check-circle"></i>
+                      <span>Résolution</span>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <!-- End tab content item -->
-
-            <div class="tab-pane fade" id="features-tab-2">
-              <div class="row align-items-center">
-                <div class="col-lg-5">
-                  <div class="content-wrapper">
-                    <div class="icon-badge">
-                      <i class="bi bi-person-check"></i>
-                    </div>
-                    <h3>Participation Active</h3>
-                    <p>
-                      Bouton "Je veux aider" pour rejoindre la résolution d'un
-                      problème et suivre les progrès collectifs.
-                    </p>
-
-                    <div class="feature-grid">
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Rejoindre des initiatives locales</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Suivi des contributions</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Notifications sur avancées</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Éviter les doublons automatiques</span>
-                      </div>
-                    </div>
-
-                    <div class="stats-row">
-                      <div class="stat-item">
-                        <div class="stat-number">+200</div>
-                        <div class="stat-label">Participants Actifs</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">Collaboratif</div>
-                        <div class="stat-label">Mode</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">Impact Mesuré</div>
-                        <div class="stat-label">Réel</div>
-                      </div>
-                    </div>
-
-                    <a href="#" class="btn-primary">Participer <i class="bi bi-arrow-right"></i></a>
-                  </div>
-                </div>
-
-                <div class="col-lg-7">
-                  <div class="visual-content">
-                    <div class="main-image">
-                      <img src="assets/img/features/features-2.webp" alt="Participation" class="img-fluid" />
-                      <div class="floating-card">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                        <div class="card-content">
-                          <span>Engagement</span>
-                          <strong>Communautaire</strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End tab content item -->
-
-            <div class="tab-pane fade" id="features-tab-3">
-              <div class="row align-items-center">
-                <div class="col-lg-5">
-                  <div class="content-wrapper">
-                    <div class="icon-badge">
-                      <i class="bi bi-graph-up"></i>
-                    </div>
-                    <h3>Statistiques et Suivi</h3>
-                    <p>
-                      Tableaux de bord avec nombre de problèmes, catégories
-                      fréquentes et taux de résolution pour mesurer l'impact.
-                    </p>
-
-                    <div class="feature-grid">
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Graphiques interactifs</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Catégories les plus signalées</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Problèmes résolus par zone</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Rapports exportables</span>
-                      </div>
-                    </div>
-
-                    <div class="stats-row">
-                      <div class="stat-item">
-                        <div class="stat-number">En Temps Réel</div>
-                        <div class="stat-label">Données</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Transparence</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">MySQL</div>
-                        <div class="stat-label">Base</div>
-                      </div>
-                    </div>
-
-                    <a href="#stats" class="btn-primary">Voir les Stats <i class="bi bi-arrow-right"></i></a>
-                  </div>
-                </div>
-
-                <div class="col-lg-7">
-                  <div class="visual-content">
-                    <div class="main-image">
-                      <img src="assets/img/features/features-6.webp" alt="Statistiques" class="img-fluid" />
-                      <div class="floating-card">
-                        <i class="bi bi-bar-chart"></i>
-                        <div class="card-content">
-                          <span>Analyse</span>
-                          <strong>Détaillée</strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End tab content item -->
-
-            <div class="tab-pane fade" id="features-tab-4">
-              <div class="row align-items-center">
-                <div class="col-lg-5">
-                  <div class="content-wrapper">
-                    <div class="icon-badge">
-                      <i class="bi bi-lock"></i>
-                    </div>
-                    <h3>Sécurité et Confidentialité</h3>
-                    <p>
-                      Authentification sécurisée, hachage des mots de passe et
-                      respect du RGPD pour protéger vos données.
-                    </p>
-
-                    <div class="feature-grid">
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Inscription/Connexion sécurisée</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Validation des formulaires</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Protection SQL</span>
-                      </div>
-                      <div class="feature-item">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Rôles admin/utilisateur</span>
-                      </div>
-                    </div>
-
-                    <div class="stats-row">
-                      <div class="stat-item">
-                        <div class="stat-number">RGPD</div>
-                        <div class="stat-label">Conforme</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">Bcrypt</div>
-                        <div class="stat-label">Hachage</div>
-                      </div>
-                      <div class="stat-item">
-                        <div class="stat-number">Sécurisé</div>
-                        <div class="stat-label">100%</div>
-                      </div>
-                    </div>
-
-                    <a href="#" class="btn-primary">Plus sur la Sécurité <i class="bi bi-arrow-right"></i></a>
-                  </div>
-                </div>
-
-                <div class="col-lg-7">
-                  <div class="visual-content">
-                    <div class="main-image">
-                      <img src="assets/img/features/features-1.webp" alt="Sécurité" class="img-fluid" />
-                      <div class="floating-card">
-                        <i class="bi bi-shield-lock"></i>
-                        <div class="card-content">
-                          <span>Protection</span>
-                          <strong>Avancée</strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End tab content item -->
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /Features Section -->
-
-    <!-- Signalement Section (Adapted from Services) -->
-    <section id="signalement" class="services section">
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Signalement</span>
-        <h2>Signaler un Problème</h2>
-        <p>Un formulaire simple et intuitif pour décrire votre signalement</p>
-      </div>
-      <!-- End Section Title -->
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row align-items-center">
-          <div class="col-lg-6">
-            <div class="intro-content" data-aos="fade-right" data-aos-delay="100">
-              <div class="section-badge mb-3" data-aos="zoom-in" data-aos-delay="50">
-                <i class="bi bi-exclamation-triangle"></i>
-                <span>COMMENT ÇA MARCHE</span>
-              </div>
-              <h2 class="section-heading mb-4">
-                Remplissez le formulaire en quelques clics
-              </h2>
-              <p class="section-description mb-4">
-                Vous avez remarqué un problème de pollution ? <br />
-                Signalez-le ici pour que nous puissions agir ensemble.
-              </p>
-              <a href="#" class="cta-button" data-aos="fade-right" data-aos-delay="200" data-bs-toggle="modal"
-                data-bs-target="#signalementModal">
-                Ouvrir le Formulaire
-              </a>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="hero-visual" data-aos="fade-left" data-aos-delay="150">
-              <img src="assets/img/services/services-1.webp" alt="Formulaire de signalement" class="img-fluid" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal pour le formulaire de signalement -->
-        <div class="modal fade" id="signalementModal" tabindex="-1">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Signaler un Problème</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-                <div id="eventSuccessMessage" class="alert alert-success" style="display: none;">Event created</div>
-                <form action="controllers/EventController.php" method="post" enctype="multipart/form-data">
-                  <div class="mb-3">
-                    <label for="titre" class="form-label">Titre</label>
-                    <input type="text" class="form-control" id="titre" name="titre" required />
-                  </div>
-                  <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                  </div>
-                  <div class="mb-3">
-                    <label for="categorie" class="form-label">Catégorie</label>
-                    <select class="form-select" id="categorie" name="categorie" required>
-                      <option value="">Sélectionnez...</option>
-                      <option value="pollution">Pollution</option>
-                      <option value="dechets">Déchets</option>
-                      <option value="plages">Plages à nettoyer</option>
-                      <option value="autres">Autres</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="pays" class="form-label">Pays</label>
-                    <select name="pays" id="pays" class="form-select location-select" required>
-                      <option value="">Sélectionnez un pays</option>
-                    </select>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="ville" class="form-label">Ville</label>
-                    <select name="ville" id="ville" class="form-select location-select" required disabled>
-                      <option value="">Sélectionnez d'abord un pays</option>
-                    </select>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="photo" class="form-label">Photo (optionnel)</label>
-                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" />
-                  </div>
-                  <input type="hidden" name="user_id" value="1" />
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                      Annuler
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      Envoyer le Signalement
-                    </button>
-                  </div>
-                </form>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    <!-- /Signalement Section -->
+      </section>
+      <!-- /Hero Section -->
 
-    <!-- OPPORTUNITY SECTION -->
-    <section id="participation" class="participation section">
-      <div class="container" data-aos="fade-up">
-        <div class="section-header">
-          <h2>Participe aux Opportunités</h2>
+      <!-- About Section -->
+      <section id="about" class="about section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row gy-5">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+              <div class="content-wrapper">
+                <div class="section-header">
+                  <span class="section-badge">À PROPOS D'ECOSOLVE</span>
+                  <h2>
+                    Renforcez la participation citoyenne pour un développement
+                    urbain durable
+                  </h2>
+                </div>
+
+                <p class="lead-text">
+                  EcoSolve vise à connecter les citoyens, les associations et
+                  les autorités locales pour identifier et résoudre rapidement
+                  les problèmes environnementaux et urbains dans votre ville ou
+                  région.
+                </p>
+
+                <p class="description-text">
+                  Grâce à une interface intuitive, visualisez les signalements
+                  sur une carte interactive et rejoignez des initiatives
+                  collectives pour un impact réel.
+                </p>
+
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Semaines de Développement</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Développeurs</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Gratuit & Ouvert</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-number">PHP/MySQL</div>
+                    <div class="stat-label">Technologies</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+              <div class="visual-section">
+                <div class="main-image-container">
+                  <img
+                    src="assets/img/about/about-8.webp"
+                    alt="Équipe EcoSolve en action"
+                    class="img-fluid main-visual"
+                  />
+                  <div class="overlay-card">
+                    <div class="card-content">
+                      <h4>Durabilité Urbaine</h4>
+                      <p>
+                        Ensemble pour des quartiers plus propres et sécurisés.
+                      </p>
+                      <div class="card-icon">
+                        <i class="bi bi-leaf"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="secondary-images">
+                  <div class="row g-3">
+                    <div class="col-6">
+                      <img
+                        src="assets/img/about/about-11.webp"
+                        alt="Signalement citoyen"
+                        class="img-fluid secondary-img"
+                      />
+                    </div>
+                    <div class="col-6">
+                      <img
+                        src="assets/img/about/about-5.webp"
+                        alt="Carte collaborative"
+                        class="img-fluid secondary-img"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-5">
+            <div class="col-12" data-aos="fade-up" data-aos-delay="400">
+              <div class="features-section">
+                <div class="row gy-4">
+                  <div class="col-md-4">
+                    <div class="feature-box">
+                      <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                      </div>
+                      <h5>Sécurité des Données</h5>
+                      <p>
+                        Protection contre les injections SQL et validation
+                        stricte des formulaires pour une confidentialité
+                        optimale.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="feature-box">
+                      <div class="feature-icon">
+                        <i class="bi bi-lightning-charge"></i>
+                      </div>
+                      <h5>Réactivité</h5>
+                      <p>
+                        Design responsive pour mobile et desktop, avec
+                        notifications en temps réel.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="feature-box">
+                      <div class="feature-icon">
+                        <i class="bi bi-headset"></i>
+                      </div>
+                      <h5>Support Communautaire</h5>
+                      <p>
+                        Espace admin pour modérer et une communauté active pour
+                        l'assistance.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /About Section -->
+
+      <!-- Features Section -->
+      <section id="features" class="features section">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <span class="description-title">Fonctionnalités</span>
+          <h2>Fonctionnalités Principales</h2>
           <p>
-            Rejoins des actions locales pour protéger l’environnement et
-            améliorer ton quartier.
+            Une plateforme intuitive pour signaler, visualiser et résoudre les
+            problèmes locaux
           </p>
         </div>
-      </div>
-    </section>
+        <!-- End Section Title -->
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact section light-background">
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Contact</span>
-        <h2>Contactez-Nous</h2>
-        <p>Rejoignez l'équipe EcoSolve ou signalez un bug</p>
-      </div>
-      <!-- End Section Title -->
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="tabs-wrapper">
+            <ul class="nav nav-tabs" data-aos="fade-up" data-aos-delay="100">
+              <li class="nav-item">
+                <a
+                  class="nav-link active show"
+                  data-bs-toggle="tab"
+                  data-bs-target="#features-tab-1"
+                >
+                  <div class="tab-icon">
+                    <i class="bi bi-geo-alt"></i>
+                  </div>
+                  <div class="tab-content">
+                    <h5>Carte Interactive</h5>
+                    <span>Visualisez les problèmes</span>
+                  </div>
+                </a>
+              </li>
+              <!-- End tab nav item -->
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row g-5">
-          <div class="col-lg-6">
-            <div class="content" data-aos="fade-up" data-aos-delay="200">
-              <div class="section-category mb-3">Contactez EcoSolve</div>
-              <h2 class="display-5 mb-4">
-                Pour toute question sur la plateforme
-              </h2>
-              <p class="lead mb-4">
-                Nous sommes là pour vous aider à rendre votre ville meilleure.
-              </p>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#features-tab-2"
+                >
+                  <div class="tab-icon">
+                    <i class="bi bi-person-check"></i>
+                  </div>
+                  <div class="tab-content">
+                    <h5>Participation</h5>
+                    <span>Rejoignez l'action</span>
+                  </div>
+                </a>
+              </li>
+              <!-- End tab nav item -->
 
-              <div class="contact-info mt-5">
-                <div class="info-item d-flex mb-3" data-aos="fade-up" data-aos-delay="300">
-                  <i class="bi bi-envelope-at me-3"></i>
-                  <span>contact@ecosolve.tn</span>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#features-tab-3"
+                >
+                  <div class="tab-icon">
+                    <i class="bi bi-graph-up"></i>
+                  </div>
+                  <div class="tab-content">
+                    <h5>Tableau de Bord</h5>
+                    <span>Suivez l'impact</span>
+                  </div>
+                </a>
+              </li>
+              <!-- End tab nav item -->
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#features-tab-4"
+                >
+                  <div class="tab-icon">
+                    <i class="bi bi-lock"></i>
+                  </div>
+                  <div class="tab-content">
+                    <h5>Sécurité</h5>
+                    <span>Données protégées</span>
+                  </div>
+                </a>
+              </li>
+              <!-- End tab nav item -->
+            </ul>
+
+            <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+              <div class="tab-pane fade active show" id="features-tab-1">
+                <div class="row align-items-center">
+                  <div class="col-lg-5">
+                    <div class="content-wrapper">
+                      <div class="icon-badge">
+                        <i class="bi bi-geo-alt"></i>
+                      </div>
+                      <h3>Carte Interactive</h3>
+                      <p>
+                        Affichage des problèmes sur une carte, filtrage par
+                        catégorie et zone géographique pour une navigation
+                        intuitive.
+                      </p>
+
+                      <div class="feature-grid">
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Marqueurs cliquables pour détails</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span
+                            >Filtres par catégorie (pollution, déchets,
+                            etc.)</span
+                          >
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Zoom sur quartiers locaux</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Intégration GPS pour localisation</span>
+                        </div>
+                      </div>
+
+                      <div class="stats-row">
+                        <div class="stat-item">
+                          <div class="stat-number">100%</div>
+                          <div class="stat-label">Responsive</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">50+</div>
+                          <div class="stat-label">Catégories</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">Temps Réel</div>
+                          <div class="stat-label">Mises à Jour</div>
+                        </div>
+                      </div>
+
+                      <a href="#" class="btn-primary"
+                        >Découvrir la Carte <i class="bi bi-arrow-right"></i
+                      ></a>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-7">
+                    <div class="visual-content">
+                      <div class="main-image">
+                        <img
+                          src="assets/img/features/features-4.webp"
+                          alt="Carte EcoSolve"
+                          class="img-fluid"
+                        />
+                        <div class="floating-card">
+                          <i class="bi bi-map"></i>
+                          <div class="card-content">
+                            <span>Localisation</span>
+                            <strong>Précise</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <!-- End tab content item -->
 
-                <div class="info-item d-flex mb-4" data-aos="fade-up" data-aos-delay="500">
-                  <i class="bi bi-geo-alt me-3"></i>
-                  <span>Monastir, Tunisia</span>
+              <div class="tab-pane fade" id="features-tab-2">
+                <div class="row align-items-center">
+                  <div class="col-lg-5">
+                    <div class="content-wrapper">
+                      <div class="icon-badge">
+                        <i class="bi bi-person-check"></i>
+                      </div>
+                      <h3>Participation Active</h3>
+                      <p>
+                        Bouton "Je veux aider" pour rejoindre la résolution d'un
+                        problème et suivre les progrès collectifs.
+                      </p>
+
+                      <div class="feature-grid">
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Rejoindre des initiatives locales</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Suivi des contributions</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Notifications sur avancées</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Éviter les doublons automatiques</span>
+                        </div>
+                      </div>
+
+                      <div class="stats-row">
+                        <div class="stat-item">
+                          <div class="stat-number">+200</div>
+                          <div class="stat-label">Participants Actifs</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">Collaboratif</div>
+                          <div class="stat-label">Mode</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">Impact Mesuré</div>
+                          <div class="stat-label">Réel</div>
+                        </div>
+                      </div>
+
+                      <a href="#" class="btn-primary"
+                        >Participer <i class="bi bi-arrow-right"></i
+                      ></a>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-7">
+                    <div class="visual-content">
+                      <div class="main-image">
+                        <img
+                          src="assets/img/features/features-2.webp"
+                          alt="Participation"
+                          class="img-fluid"
+                        />
+                        <div class="floating-card">
+                          <i class="bi bi-hand-thumbs-up"></i>
+                          <div class="card-content">
+                            <span>Engagement</span>
+                            <strong>Communautaire</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <!-- End tab content item -->
 
-                <a href="#" class="map-link d-inline-flex align-items-center" data-aos="fade-up" data-aos-delay="600">
-                  Voir sur la Carte
-                  <i class="bi bi-arrow-right ms-2"></i>
+              <div class="tab-pane fade" id="features-tab-3">
+                <div class="row align-items-center">
+                  <div class="col-lg-5">
+                    <div class="content-wrapper">
+                      <div class="icon-badge">
+                        <i class="bi bi-graph-up"></i>
+                      </div>
+                      <h3>Statistiques et Suivi</h3>
+                      <p>
+                        Tableaux de bord avec nombre de problèmes, catégories
+                        fréquentes et taux de résolution pour mesurer l'impact.
+                      </p>
+
+                      <div class="feature-grid">
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Graphiques interactifs</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Catégories les plus signalées</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Problèmes résolus par zone</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Rapports exportables</span>
+                        </div>
+                      </div>
+
+                      <div class="stats-row">
+                        <div class="stat-item">
+                          <div class="stat-number">En Temps Réel</div>
+                          <div class="stat-label">Données</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">100%</div>
+                          <div class="stat-label">Transparence</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">MySQL</div>
+                          <div class="stat-label">Base</div>
+                        </div>
+                      </div>
+
+                      <a href="#stats" class="btn-primary"
+                        >Voir les Stats <i class="bi bi-arrow-right"></i
+                      ></a>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-7">
+                    <div class="visual-content">
+                      <div class="main-image">
+                        <img
+                          src="assets/img/features/features-6.webp"
+                          alt="Statistiques"
+                          class="img-fluid"
+                        />
+                        <div class="floating-card">
+                          <i class="bi bi-bar-chart"></i>
+                          <div class="card-content">
+                            <span>Analyse</span>
+                            <strong>Détaillée</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End tab content item -->
+
+              <div class="tab-pane fade" id="features-tab-4">
+                <div class="row align-items-center">
+                  <div class="col-lg-5">
+                    <div class="content-wrapper">
+                      <div class="icon-badge">
+                        <i class="bi bi-lock"></i>
+                      </div>
+                      <h3>Sécurité et Confidentialité</h3>
+                      <p>
+                        Authentification sécurisée, hachage des mots de passe et
+                        respect du RGPD pour protéger vos données.
+                      </p>
+
+                      <div class="feature-grid">
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Inscription/Connexion sécurisée</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Validation des formulaires</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Protection SQL</span>
+                        </div>
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle-fill"></i>
+                          <span>Rôles admin/utilisateur</span>
+                        </div>
+                      </div>
+
+                      <div class="stats-row">
+                        <div class="stat-item">
+                          <div class="stat-number">RGPD</div>
+                          <div class="stat-label">Conforme</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">Bcrypt</div>
+                          <div class="stat-label">Hachage</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-number">Sécurisé</div>
+                          <div class="stat-label">100%</div>
+                        </div>
+                      </div>
+
+                      <a href="#" class="btn-primary"
+                        >Plus sur la Sécurité <i class="bi bi-arrow-right"></i
+                      ></a>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-7">
+                    <div class="visual-content">
+                      <div class="main-image">
+                        <img
+                          src="assets/img/features/features-1.webp"
+                          alt="Sécurité"
+                          class="img-fluid"
+                        />
+                        <div class="floating-card">
+                          <i class="bi bi-shield-lock"></i>
+                          <div class="card-content">
+                            <span>Protection</span>
+                            <strong>Avancée</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End tab content item -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Features Section -->
+
+      <!-- Signalement Section (Adapted from Services) -->
+      <section id="signalement" class="services section">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <span class="description-title">Signalement</span>
+          <h2>Signaler un Problème</h2>
+          <p>Un formulaire simple et intuitif pour décrire votre signalement</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div
+                class="intro-content"
+                data-aos="fade-right"
+                data-aos-delay="100"
+              >
+                <div
+                  class="section-badge mb-3"
+                  data-aos="zoom-in"
+                  data-aos-delay="50"
+                >
+                  <i class="bi bi-exclamation-triangle"></i>
+                  <span>COMMENT ÇA MARCHE</span>
+                </div>
+                <h2 class="section-heading mb-4">
+                  Remplissez le formulaire en quelques clics
+                </h2>
+                <p class="section-description mb-4">
+                  Vous avez remarqué un problème de pollution ? <br />
+                  Signalez-le ici pour que nous puissions agir ensemble.
+                </p>
+                <a
+                  href="#"
+                  class="cta-button"
+                  data-aos="fade-right"
+                  data-aos-delay="200"
+                  data-bs-toggle="modal"
+                  data-bs-target="#signalementModal"
+                >
+                  Ouvrir le Formulaire
                 </a>
               </div>
             </div>
+            <div class="col-lg-6">
+              <div
+                class="hero-visual"
+                data-aos="fade-left"
+                data-aos-delay="150"
+              >
+                <img
+                  src="assets/img/services/services-1.webp"
+                  alt="Formulaire de signalement"
+                  class="img-fluid"
+                />
+              </div>
+            </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="contact-form card" data-aos="fade-up" data-aos-delay="300">
-              <div class="card-body p-4 p-lg-5">
-                <form action="backend/contact.php" method="post" class="php-email-form" data-aos="fade-up"
-                  data-aos-delay="600">
-                  <div class="row gy-4">
-                    <div class="col-12">
-                      <input type="text" name="name" class="form-control" placeholder="Votre Nom" required="" />
+          <!-- Modal pour le formulaire de signalement -->
+          <div class="modal fade" id="signalementModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Signaler un Problème</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div
+                    id="eventSuccessMessage"
+                    class="alert alert-success"
+                    style="display: none"
+                  >
+                    Event created
+                  </div>
+                  <form
+                    action="controllers/EventController.php"
+                    method="post"
+                    enctype="multipart/form-data"
+                  >
+                    <div class="mb-3">
+                      <label for="titre" class="form-label">Titre</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="titre"
+                        name="titre"
+                        required
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Description</label
+                      >
+                      <textarea
+                        class="form-control"
+                        id="description"
+                        name="description"
+                        rows="3"
+                        required
+                      ></textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label for="categorie" class="form-label"
+                        >Catégorie</label
+                      >
+                      <select
+                        class="form-select"
+                        id="categorie"
+                        name="categorie"
+                        required
+                      >
+                        <option value="">Sélectionnez...</option>
+                        <option value="pollution">Pollution</option>
+                        <option value="dechets">Déchets</option>
+                        <option value="plages">Plages à nettoyer</option>
+                        <option value="autres">Autres</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="pays" class="form-label">Pays</label>
+                      <select
+                        name="pays"
+                        id="pays"
+                        class="form-select location-select"
+                        required
+                      >
+                        <option value="">Sélectionnez un pays</option>
+                      </select>
                     </div>
 
-                    <div class="col-12">
-                      <input type="email" class="form-control" name="email" placeholder="Votre Email" required="" />
+                    <div class="mb-3">
+                      <label for="ville" class="form-label">Ville</label>
+                      <select
+                        name="ville"
+                        id="ville"
+                        class="form-select location-select"
+                        required
+                        disabled
+                      >
+                        <option value="">Sélectionnez d'abord un pays</option>
+                      </select>
                     </div>
 
-                    <div class="col-12">
-                      <input type="text" class="form-control" name="subject" placeholder="Sujet" required="" />
+                    <div class="mb-3">
+                      <label for="photo" class="form-label"
+                        >Photo (optionnel)</label
+                      >
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="photo"
+                        name="photo"
+                        accept="image/*"
+                      />
                     </div>
-
-                    <div class="col-12">
-                      <textarea class="form-control" name="message" rows="6" placeholder="Message"
-                        required=""></textarea>
-                    </div>
-
-                    <div class="col-12 text-center">
-                      <div class="loading">Envoi en cours</div>
-                      <div class="error-message"></div>
-                      <div class="sent-message">
-                        Votre message a été envoyé. Merci !
-                      </div>
-
-                      <button type="submit" class="btn btn-submit w-100">
-                        Envoyer
+                    <input type="hidden" name="user_id" value="1" />
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Annuler
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        Envoyer le Signalement
                       </button>
                     </div>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    <!-- /Contact Section -->
-  </main>
+      </section>
+      <!-- /Signalement Section -->
 
-  <footer id="footer" class="footer position-relative dark-background">
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">EcoSolve</span>
-          </a>
-          <p>
-            Plateforme collaborative pour des villes durables. Signalement,
-            visualisation et résolution de problèmes locaux.
-          </p>
-          <div class="social-links d-flex mt-4">
-            <a href="#"><i class="bi bi-twitter-x"></i></a>
-            <a href="#"><i class="bi bi-facebook"></i></a>
-            <a href="#"><i class="bi bi-instagram"></i></a>
-            <a href="#"><i class="bi bi-linkedin"></i></a>
+      <!-- OPPORTUNITY SECTION -->
+      <section id="participation" class="participation section">
+        <div class="container" data-aos="fade-up">
+          <div class="section-header">
+            <h2>Participe aux Opportunités</h2>
+            <p>
+              Rejoins des actions locales pour protéger l’environnement et
+              améliorer ton quartier.
+            </p>
           </div>
         </div>
+      </section>
 
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Liens Utiles</h4>
-          <ul>
-            <li><a href="#hero">Accueil</a></li>
-            <li><a href="#about">À propos</a></li>
-            <li><a href="#features">Fonctionnalités</a></li>
-            <li><a href="#signalement">Signalement</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
+      <!-- Contact Section -->
+      <section id="contact" class="contact section light-background">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <span class="description-title">Contact</span>
+          <h2>Contactez-Nous</h2>
+          <p>Rejoignez l'équipe EcoSolve ou signalez un bug</p>
         </div>
+        <!-- End Section Title -->
 
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Catégories</h4>
-          <ul>
-            <li><a href="#">Pollution</a></li>
-            <li><a href="#">Nids-de-poule</a></li>
-            <li><a href="#">Déchets</a></li>
-            <li><a href="#">Plages</a></li>
-            <li><a href="#">Autres</a></li>
-          </ul>
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row g-5">
+            <div class="col-lg-6">
+              <div class="content" data-aos="fade-up" data-aos-delay="200">
+                <div class="section-category mb-3">Contactez EcoSolve</div>
+                <h2 class="display-5 mb-4">
+                  Pour toute question sur la plateforme
+                </h2>
+                <p class="lead mb-4">
+                  Nous sommes là pour vous aider à rendre votre ville meilleure.
+                </p>
+
+                <div class="contact-info mt-5">
+                  <div
+                    class="info-item d-flex mb-3"
+                    data-aos="fade-up"
+                    data-aos-delay="300"
+                  >
+                    <i class="bi bi-envelope-at me-3"></i>
+                    <span>contact@ecosolve.tn</span>
+                  </div>
+
+                  <div
+                    class="info-item d-flex mb-4"
+                    data-aos="fade-up"
+                    data-aos-delay="500"
+                  >
+                    <i class="bi bi-geo-alt me-3"></i>
+                    <span>Monastir, Tunisia</span>
+                  </div>
+
+                  <a
+                    href="#"
+                    class="map-link d-inline-flex align-items-center"
+                    data-aos="fade-up"
+                    data-aos-delay="600"
+                  >
+                    Voir sur la Carte
+                    <i class="bi bi-arrow-right ms-2"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div
+                class="contact-form card"
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
+                <div class="card-body p-4 p-lg-5">
+                  <form
+                    action="backend/contact.php"
+                    method="post"
+                    class="php-email-form"
+                    data-aos="fade-up"
+                    data-aos-delay="600"
+                  >
+                    <div class="row gy-4">
+                      <div class="col-12">
+                        <input
+                          type="text"
+                          name="name"
+                          class="form-control"
+                          placeholder="Votre Nom"
+                          required=""
+                        />
+                      </div>
+
+                      <div class="col-12">
+                        <input
+                          type="email"
+                          class="form-control"
+                          name="email"
+                          placeholder="Votre Email"
+                          required=""
+                        />
+                      </div>
+
+                      <div class="col-12">
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="subject"
+                          placeholder="Sujet"
+                          required=""
+                        />
+                      </div>
+
+                      <div class="col-12">
+                        <textarea
+                          class="form-control"
+                          name="message"
+                          rows="6"
+                          placeholder="Message"
+                          required=""
+                        ></textarea>
+                      </div>
+
+                      <div class="col-12 text-center">
+                        <div class="loading">Envoi en cours</div>
+                        <div class="error-message"></div>
+                        <div class="sent-message">
+                          Votre message a été envoyé. Merci !
+                        </div>
+
+                        <button type="submit" class="btn btn-submit w-100">
+                          Envoyer
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
+      <!-- /Contact Section -->
+    </main>
 
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Contact</h4>
-          <p>Monastir, Tunisia</p>
-          <p><strong>Email:</strong> <span>contact@ecosolve.tn</span></p>
+    <footer id="footer" class="footer position-relative dark-background">
+      <div class="container footer-top">
+        <div class="row gy-4">
+          <div class="col-lg-5 col-md-12 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename">EcoSolve</span>
+            </a>
+            <p>
+              Plateforme collaborative pour des villes durables. Signalement,
+              visualisation et résolution de problèmes locaux.
+            </p>
+            <div class="social-links d-flex mt-4">
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-6 footer-links">
+            <h4>Liens Utiles</h4>
+            <ul>
+              <li><a href="#hero">Accueil</a></li>
+              <li><a href="#about">À propos</a></li>
+              <li><a href="#features">Fonctionnalités</a></li>
+              <li><a href="#signalement">Signalement</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-6 footer-links">
+            <h4>Catégories</h4>
+            <ul>
+              <li><a href="#">Pollution</a></li>
+              <li><a href="#">Nids-de-poule</a></li>
+              <li><a href="#">Déchets</a></li>
+              <li><a href="#">Plages</a></li>
+              <li><a href="#">Autres</a></li>
+            </ul>
+          </div>
+
+          <div
+            class="col-lg-3 col-md-12 footer-contact text-center text-md-start"
+          >
+            <h4>Contact</h4>
+            <p>Monastir, Tunisia</p>
+            <p><strong>Email:</strong> <span>contact@ecosolve.tn</span></p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="container copyright text-center mt-4">
-      <p>
-        © <span>Copyright</span>
-        <strong class="px-1 sitename">EcoSolve</strong>
-        <span>Tous Droits Réservés</span>
-      </p>
-      <div class="credits">
-        Adapté de <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      <div class="container copyright text-center mt-4">
+        <p>
+          © <span>Copyright</span>
+          <strong class="px-1 sitename">EcoSolve</strong>
+          <span>Tous Droits Réservés</span>
+        </p>
+        <div class="credits">
+          Adapté de <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
+    <!-- Scroll Top -->
+    <a
+      href="#"
+      id="scroll-top"
+      class="scroll-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/php-email-form/validate.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
 
-  <!-- Leaflet JS pour la carte -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet JS pour la carte -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
 
-  <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
 
-  <!-- Location Selector Script -->
-  <script src="assets/js/location-selector.js"></script>
+    <!-- Location Selector Script -->
+    <script src="assets/js/location-selector.js"></script>
 
-  <!-- Script pour la notification dropdown -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const notifBtn = document.querySelector(".btn-notification");
-      const notifBox = document.getElementById("notif-box");
-      const closeNotif = document.getElementById("close-notif");
+    <!-- Script pour la notification dropdown -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const notifBtn = document.querySelector(".btn-notification");
+        const notifBox = document.getElementById("notif-box");
+        const closeNotif = document.getElementById("close-notif");
 
-      if (notifBtn && notifBox) {
-        notifBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          notifBox.classList.toggle("show");
-        });
-      }
-
-      if (closeNotif && notifBox) {
-        closeNotif.addEventListener("click", function () {
-          notifBox.classList.remove("show");
-        });
-      }
-
-      // Fermer si clic en dehors
-      document.addEventListener("click", function (e) {
-        if (!notifBox.contains(e.target) && !notifBtn.contains(e.target)) {
-          notifBox.classList.remove("show");
+        if (notifBtn && notifBox) {
+          notifBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            notifBox.classList.toggle("show");
+          });
         }
+
+        if (closeNotif && notifBox) {
+          closeNotif.addEventListener("click", function () {
+            notifBox.classList.remove("show");
+          });
+        }
+
+        // Fermer si clic en dehors
+        document.addEventListener("click", function (e) {
+          if (!notifBox.contains(e.target) && !notifBtn.contains(e.target)) {
+            notifBox.classList.remove("show");
+          }
+        });
       });
-    });
-  </script>
+    </script>
 
-  <!-- Script simple pour initialiser une carte Leaflet (exemple dans hero ou features) -->
-  <script>
-    // Exemple : Ajouter une carte dans une section si besoin
-    // var map = L.map('map-container').setView([48.8566, 2.3522], 13); // Paris
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  </script>
+    <!-- Script simple pour initialiser une carte Leaflet (exemple dans hero ou features) -->
+    <script>
+      // Exemple : Ajouter une carte dans une section si besoin
+      // var map = L.map('map-container').setView([48.8566, 2.3522], 13); // Paris
+      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    </script>
 
-  <!-- Show success message when event is created -->
-</body>
-
+    <!-- Show success message when event is created -->
+  </body>
 </html>
