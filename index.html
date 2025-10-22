@@ -86,7 +86,7 @@
             <li><a href="#participation"> Opportunités </a></li>
 
             <li>
-              <a href="views/dashboard.php"> Tableau de Bord </a>
+              <a href="views/BackOffice/dashboard.php"> Tableau de Bord </a>
             </li>
 
             <li><a href="#contact">Contact</a></li>
@@ -96,7 +96,9 @@
 
         <!-- Boutons à droite (S'inscrire + Notifications) -->
         <div class="d-flex align-items-center gap-4 position-relative">
-          <a class="btn-getstarted" href="views/register.php"> S'inscrire </a>
+          <a class="btn-getstarted" href="views/FrontOffice/register.php">
+            S'inscrire
+          </a>
 
           <!-- Bouton notification -->
           <a
@@ -870,7 +872,7 @@
                 </div>
                 <div class="modal-body">
                   <form
-                    action="backend\controllers\EventController.php"
+                    action="controllers\EventController.php"
                     method="post"
                     enctype="multipart/form-data"
                   >
