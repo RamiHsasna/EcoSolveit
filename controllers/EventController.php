@@ -4,15 +4,18 @@ require_once __DIR__ . '/../core/database.php';
 
 use Models\EcoEvent;
 
-class EventController {
+class EventController
+{
     private $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
         $database = Database::getInstance();
         $this->conn = $database->getConnection();
     }
 
-    public function createEvent(EcoEvent $event) {
+    public function createEvent(EcoEvent $event)
+    {
         try {
             $data = [
                 ':event_name' => $event->getEventName(),
@@ -48,20 +51,25 @@ class EventController {
         }
     }
 
-    public function getAllEvents() {
-        $query = "SELECT * FROM eco_event ORDER BY created_at DESC";
+    public function getAllEvents()
+    {
+        // Join with category to include category_name for easier use in views
+        $query = "SELECT e.*, c.category_name
+                  FROM eco_event e
+                  LEFT JOIN category c ON e.category_id = c.id
+                  ORDER BY e.created_at DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function deleteEvent($id) {
+    public function deleteEvent($id)
+    {
         $query = "DELETE FROM eco_event WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
 }
 
 // Procedural POST handler so this controller file can accept form submissions directly.
@@ -111,18 +119,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // user id: validate that user exists in users table
         $userId = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 1;
-        
+
         // Check if user exists
         $stmt = $conn->prepare('SELECT id FROM users WHERE id = :user_id LIMIT 1');
         $stmt->execute([':user_id' => $userId]);
         $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$userRow) {
             // User doesn't exist, try to get first available user
             $stmt = $conn->prepare('SELECT id FROM users ORDER BY id ASC LIMIT 1');
             $stmt->execute();
             $firstUser = $stmt->fetch(PDO::FETCH_ASSOC);
-            
+
             if ($firstUser && isset($firstUser['id'])) {
                 $userId = (int)$firstUser['id'];
             } else {
@@ -139,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $userId = (int)$conn->lastInsertId();
             }
         }
-        
+
         $event->setUserId($userId);
 
         // event date: accept event_date or date; fallback to now
@@ -176,5 +184,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-?>
