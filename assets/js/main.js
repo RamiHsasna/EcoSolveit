@@ -225,37 +225,182 @@
   window.addEventListener("load", navmenuScrollspy);
   document.addEventListener("scroll", navmenuScrollspy);
 
-  const notificationBtn = document.querySelector('.btn-notification');
+// SECTION NOTIFS (remplace l'ancienne – unifié "api")
+
+const notificationBtn = document.querySelector('.btn-notification');
 const notifBox = document.getElementById('notif-box');
+const notifList = document.getElementById('notif-list');
+const notifBadge = document.getElementById('notif-badge');
+const notifCount = document.getElementById('notif-count');
+const closeNotif = document.getElementById('close-notif');
 
-console.log('Debug: Bouton trouvé ?', notificationBtn); // Vérifie si le bouton est trouvé
-console.log('Debug: Boîte trouvée ?', notifBox); // Vérifie si la boîte est trouvée
+let userCity = '';
+let userId = '';
 
-if (notificationBtn && notifBox) {
-  notificationBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    console.log('Debug: Clic sur bouton détecté !'); // Trace le clic
-    
-    notifBox.classList.toggle('active');
-    
-    // Cacher le badge (recherche dans le bouton cliqué)
-    const badge = this.querySelector('.badge');
-    console.log('Debug: Badge trouvé ?', badge); // Vérifie si le badge est trouvé
-    
-    if (badge) {
-      badge.classList.add('d-none');
-      console.log('Debug: Badge caché !'); // Confirme la cache
-    } else {
-      console.log('Erreur: Pas de badge trouvé !'); // Si pas trouvé
-    }
-  });
-
-  document.addEventListener('click', function(e) {
-    if (!notifBox.contains(e.target) && !notificationBtn.contains(e.target)) {
-      notifBox.classList.remove('active');
-    }
-  });
-} else {
-  console.log('Erreur: Bouton ou boîte non trouvés au chargement !');
+async function loadUserData() {
+  try {
+    const response = await fetch('/EcoSolveit/api/user_data.php');
+    if (!response.ok) throw new Error('Erreur user data');
+    const data = await response.json();
+    userCity = data.user_city || 'Monastir';
+    userId = data.user_id.toString() || '1';
+    localStorage.setItem('userCity', userCity);
+    localStorage.setItem('userId', userId);
+    console.log('Debug: Ville:', userCity, 'ID:', userId);
+    loadNotificationCount();
+  } catch (e) {
+    console.error('Erreur user data:', e);
+    userCity = localStorage.getItem('userCity') || 'Monastir';
+    userId = localStorage.getItem('userId') || '1';
+    console.log('Debug (fallback): Ville:', userCity, 'ID:', userId);
+    loadNotificationCount();
+  }
 }
+
+function loadNotificationCount() {
+  if (!userId) return;
+  const countUrl = `/EcoSolveit/api/get_notifications.php?user_id=${userId}&count_only=1`;
+  console.log('Fetch count:', countUrl);
+  fetch(countUrl)
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(data => {
+      console.log('Count data:', data);  // DEBUG
+      updateBadge(data.unread_count || 0);
+    })
+    .catch(err => {
+      console.error('Erreur count:', err);
+      updateBadge(0);
+    });
+}
+
+function updateBadge(count) {
+  if (!notifCount || !notifBadge) return;
+  notifCount.textContent = count;
+  notifBadge.textContent = count > 99 ? '99+' : count;
+  notifBadge.style.display = count > 0 ? 'block' : 'none';
+}
+
+async function loadNotifications(silent = false) {
+  if (!notifList || !userId) return;
+
+  if (!silent) {
+    notifList.innerHTML = `
+      <div class="loading-notif text-center py-3">
+        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+        <small class="d-block text-muted mt-1">Chargement...</small>
+      </div>
+    `;
+  }
+
+  try {
+    const url = `/EcoSolveit/api/get_notifications.php?user_id=${userId}`;
+    console.log('Fetch notifications:', url);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const notifications = data.notifications || [];  // Extraire array
+    console.log("Notifs reçues:", notifications);  // DEBUG : Voir la nouvelle
+
+    if (notifications.length === 0) {
+      notifList.innerHTML = '<p class="text-center text-muted py-3">Aucune nouvelle notification.</p>';
+      updateBadge(0);
+      return;
+    }
+
+    let html = '';
+    let unreadCount = 0;
+
+    notifications.forEach(notif => {
+      const isUnread = !notif.read_status;  // FIX : read_status (JSON)
+      if (isUnread) unreadCount++;
+
+      html += `
+        <a href="${notif.link || '#'}" class="notification-item d-flex align-items-start p-3 border-bottom ${isUnread ? 'unread' : ''}" 
+           style="${isUnread ? 'background-color: rgba(0,123,255,0.1);' : ''}" 
+           onclick="markAsRead(${notif.id}); return false;">
+          <div class="notification-icon me-3">
+            <i class="bi bi-bell text-primary fs-4"></i>
+          </div>
+          <div class="notification-content flex-grow-1">
+            <h6 class="mb-1 text-truncate">${notif.title || notif.description.substring(0,30) || 'Nouvel événement'}</h6>
+            <p class="mb-1 text-muted small text-truncate">${(notif.description || '').substring(0,80)}${(notif.description || '').length > 80 ? '...' : ''}</p>
+            <small class="text-muted">${notif.created_at || 'Date inconnue'}</small>
+          </div>
+          ${isUnread ? '<span class="badge bg-primary ms-auto">Nouveau</span>' : ''}
+        </a>
+      `;
+    });
+
+    notifList.innerHTML = html;
+    updateBadge(unreadCount);
+
+  } catch (error) {
+    console.error('Erreur fetch:', error);
+    notifList.innerHTML = '<p class="text-center text-muted py-3">Erreur de chargement. <button class="btn btn-sm btn-outline-primary mt-2" onclick="loadNotifications()">Réessayer</button></p>';
+    updateBadge(0);
+  }
+}
+
+// Marque une notif individuelle comme lue
+async function markAsRead(id) {
+  if (!userId) return;
+  try {
+    await fetch('/EcoSolveit/api/mark_read.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `notif_id=${id}&user_id=${userId}`
+    });
+    loadNotifications(true);
+  } catch (e) {
+    console.error('Erreur mark:', e);
+  }
+}
+
+// Marque TOUS les notifs comme lus
+async function markAllAsRead() {
+  if (!userId) return;
+  try {
+    const response = await fetch('/EcoSolveit/api/mark_all_read.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `user_id=${userId}`
+    });
+    if (response.ok) {
+      loadNotifications(true);
+      loadNotificationCount();
+    }
+  } catch (e) {
+    console.error('Erreur mark all:', e);
+    updateBadge(0);
+  }
+}
+
+// Rendre globale
+window.markAsRead = markAsRead;
+
+// Toggle dropdown
+if (notificationBtn && notifBox) {
+  notificationBtn.addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    notifBox.classList.toggle('show');
+    if (notifBox.classList.contains('show')) {
+      loadNotifications();
+      markAllAsRead();
+    }
+  });
+}
+
+if (closeNotif) {
+  closeNotif.addEventListener('click', e => { e.preventDefault(); notifBox.classList.remove('show'); });
+}
+
+document.addEventListener('click', e => {
+  if (!notifBox.contains(e.target) && !notificationBtn.contains(e.target)) notifBox.classList.remove('show');
+});
+
+window.addEventListener('load', loadUserData);
+
 })();
