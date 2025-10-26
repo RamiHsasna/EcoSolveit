@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../models/EcoEvent.php';
+require_once __DIR__ . '/../models/Notification.php';
 require_once __DIR__ . '/../core/database.php';
 
 use Models\EcoEvent;
+use Models\Notification;
 
 class EventController
 {
@@ -166,6 +168,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Create event
         $result = $controller->createEvent($event);
+// NOUVEAU : Créer notif auto
+        $notif = new Notification();
+        $notif->setType('event_created');
+        $notif->setUserId($userId);
+        $notif->setTitle("Votre événement '{$eventName}' a été créé !");
+        $notif->setDescription(substr($event->getDescription() ?? '', 0, 100) . '...');
+        $notif->setLink("/EcoSolveit/views/FrontOffice/event_detail.php?id=" . $result['id']);
+
+        require_once __DIR__ . '/NotificationController.php';
+        $notifController = new NotificationController();
+        $notifController->createNotification($notif);
+
+        // Optionnel : Notifs locales
+        $localVille = $event->getVille();
+        if ($localVille) {
+            $localQuery = "INSERT INTO notifications (type, user_id, title, message, link, is_read) 
+                           SELECT 'event_created', u.id, :title_local, :msg, :link, 0 
+                           FROM users u WHERE u.ville = :ville AND u.id != :user_id LIMIT 5";
+            $localStmt = $conn->prepare($localQuery);
+            $localStmt->execute([
+                ':title_local' => "Nouvelle opportunité à {$localVille} !",
+                ':msg' => $notif->getDescription(),
+                ':link' => $notif->getLink(),
+                ':ville' => $localVille,
+                ':user_id' => $userId
+            ]);
+        }
 
         // On success, redirect back or output JSON depending on request
         if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
@@ -184,3 +213,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+?>
