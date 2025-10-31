@@ -45,6 +45,7 @@
 
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet" />
+    <link href="assets/css/events.css" rel="stylesheet" />
 
     <!-- Leaflet pour la carte interactive -->
     <link
@@ -61,251 +62,255 @@
   * Author: Adapted by Grok
   ======================================================== -->
 
+    <style>
+      :root {
+        --accent-color: #00a19e;
+        --success-color: #2ecc71;
+        --warning-color: #f39c12;
+        --error-color: #ff4757;
+        --surface-color: #ffffff;
+        --text-primary: #1a1a1a;
+        --text-secondary: rgba(0, 0, 0, 0.6);
+        --text-tertiary: rgba(0, 0, 0, 0.4);
+        --border-light: rgba(0, 0, 0, 0.08);
+        --blur-bg: rgba(255, 255, 255, 0.85);
+      }
 
-  <style>
- :root {
-  --accent-color: #00a19e;
-  --success-color: #2ecc71;
-  --warning-color: #f39c12;
-  --error-color: #ff4757;
-  --surface-color: #ffffff;
-  --text-primary: #1a1a1a;
-  --text-secondary: rgba(0, 0, 0, 0.6);
-  --text-tertiary: rgba(0, 0, 0, 0.4);
-  --border-light: rgba(0, 0, 0, 0.08);
-  --blur-bg: rgba(255, 255, 255, 0.85);
-}
+      /* Conteneur principal */
+      .notification-dropdown {
+        position: absolute;
+        top: 110%;
+        right: 0;
+        width: 390px;
+        max-width: 95vw;
+        background: var(--blur-bg);
+        border-radius: 16px;
+        border: 1px solid var(--border-light);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+        transition: all 0.25s ease;
+        z-index: 9999;
+        font-family: "Segoe UI", Roboto, sans-serif;
+      }
 
-/* Conteneur principal */
-.notification-dropdown {
-  position: absolute;
-  top: 110%;
-  right: 0;
-  width: 390px;
-  max-width: 95vw;
-  background: var(--blur-bg);
-  border-radius: 16px;
-  border: 1px solid var(--border-light);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-8px) scale(0.96);
-  transition: all 0.25s ease;
-  z-index: 9999;
-  font-family: "Segoe UI", Roboto, sans-serif;
-}
+      .notification-dropdown.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
 
-.notification-dropdown.show {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
+      /* En-tête */
+      .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border-light);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(8px);
+      }
 
-/* En-tête */
-.notification-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--border-light);
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
-}
+      .notification-header .title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
 
-.notification-header .title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
+      .notification-header .badge-count {
+        background: var(--accent-color);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 500;
+      }
 
-.notification-header .badge-count {
-  background: var(--accent-color);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 500;
-}
+      /* Liste de notifications */
+      .notification-list {
+        max-height: 420px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-color) transparent;
+      }
 
-/* Liste de notifications */
-.notification-list {
-  max-height: 420px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-color) transparent;
-}
+      .notification-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .notification-list::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+        border-radius: 10px;
+      }
 
-.notification-list::-webkit-scrollbar {
-  width: 6px;
-}
-.notification-list::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 10px;
-}
+      /* Élément */
+      .notification-item {
+        display: flex;
+        gap: 14px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border-light);
+        transition: background 0.2s ease;
+        cursor: pointer;
+        align-items: center;
+      }
 
-/* Élément */
-.notification-item {
-  display: flex;
-  gap: 14px;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border-light);
-  transition: background 0.2s ease;
-  cursor: pointer;
-  align-items: center;
-}
+      .notification-item:hover {
+        background: rgba(0, 161, 158, 0.06);
+      }
 
-.notification-item:hover {
-  background: rgba(0, 161, 158, 0.06);
-}
+      /* Avatar */
+      .notification-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid rgba(0, 161, 158, 0.15);
+      }
 
-/* Avatar */
-.notification-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 2px solid rgba(0, 161, 158, 0.15);
-}
+      /* Icône si pas d'image */
+      .notification-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        background: rgba(0, 161, 158, 0.1);
+        color: var(--accent-color);
+        flex-shrink: 0;
+      }
 
-/* Icône si pas d'image */
-.notification-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  background: rgba(0, 161, 158, 0.1);
-  color: var(--accent-color);
-  flex-shrink: 0;
-}
+      .notification-icon.success {
+        color: var(--success-color);
+        background: rgba(46, 204, 113, 0.1);
+      }
+      .notification-icon.warning {
+        color: var(--warning-color);
+        background: rgba(243, 156, 18, 0.1);
+      }
+      .notification-icon.error {
+        color: var(--error-color);
+        background: rgba(255, 71, 87, 0.1);
+      }
 
-.notification-icon.success {
-  color: var(--success-color);
-  background: rgba(46, 204, 113, 0.1);
-}
-.notification-icon.warning {
-  color: var(--warning-color);
-  background: rgba(243, 156, 18, 0.1);
-}
-.notification-icon.error {
-  color: var(--error-color);
-  background: rgba(255, 71, 87, 0.1);
-}
+      /* Contenu */
+      .notification-content {
+        flex: 1;
+        overflow: hidden;
+      }
 
-/* Contenu */
-.notification-content {
-  flex: 1;
-  overflow: hidden;
-}
+      .notification-content h6 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-.notification-content h6 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+      .notification-content p {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.4;
+        max-height: 2.8em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-.notification-content p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.4;
-  max-height: 2.8em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+      .notification-content small {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+        color: var(--text-tertiary);
+      }
 
-.notification-content small {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--text-tertiary);
-}
+      /* Pied de page */
+      .notification-footer {
+        padding: 14px 20px;
+        text-align: center;
+        border-top: 1px solid var(--border-light);
+        background: rgba(255, 255, 255, 0.6);
+      }
 
-/* Pied de page */
-.notification-footer {
-  padding: 14px 20px;
-  text-align: center;
-  border-top: 1px solid var(--border-light);
-  background: rgba(255, 255, 255, 0.6);
-}
+      .notification-footer a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: color 0.15s ease;
+      }
+      .notification-footer a:hover {
+        color: #008b88;
+      }
 
-.notification-footer a {
-  color: var(--accent-color);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 13px;
-  transition: color 0.15s ease;
-}
-.notification-footer a:hover {
-  color: #008b88;
-}
+      /* Bouton cloche */
+      .btn-notification {
+        position: relative;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+      }
+      .btn-notification:hover {
+        background: rgba(0, 161, 158, 0.08);
+      }
+      .btn-notification i {
+        font-size: 24px;
+        color: var(--text-primary);
+      }
 
-/* Bouton cloche */
-.btn-notification {
-  position: relative;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-}
-.btn-notification:hover {
-  background: rgba(0, 161, 158, 0.08);
-}
-.btn-notification i {
-  font-size: 24px;
-  color: var(--text-primary);
-}
+      /* Badge */
+      .btn-notification .badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: var(--accent-color);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        border-radius: 50%;
+        min-width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+      }
 
-/* Badge */
-.btn-notification .badge {
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  background: var(--accent-color);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  border-radius: 50%;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.8; }
-}
-
-/* Responsive */
-@media (max-width: 576px) {
-  .notification-dropdown {
-    width: 94vw;
-    right: 3%;
-  }
-  .notification-item {
-    padding: 12px 16px;
-  }
-  .notification-avatar,
-  .notification-icon {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-
-</style>
-</head>
+      /* Responsive */
+      @media (max-width: 576px) {
+        .notification-dropdown {
+          width: 94vw;
+          right: 3%;
+        }
+        .notification-item {
+          padding: 12px 16px;
+        }
+        .notification-avatar,
+        .notification-icon {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    </style>
+  </head>
 
   <body class="index-page">
     <header id="header" class="header d-flex align-items-center fixed-top">
@@ -346,78 +351,111 @@
           </a>
 
           <!-- Bouton notification -->
-<a href="#notifications" class="btn-notification position-relative" aria-label="Notifications" role="button">
-  <i class="bi bi-bell fs-5"></i>
-  <span class="badge bg-danger rounded-circle position-absolute top-0 end-0 translate-middle mt-n2 me-n2" style="font-size: 0.6em; width: 18px; height: 18px; line-height: 1;" id="notif-badge">0</span>  <!-- Changé 3 → 0 -->
-</a>
-            
+          <a
+            href="#notifications"
+            class="btn-notification position-relative"
+            aria-label="Notifications"
+            role="button"
+          >
+            <i class="bi bi-bell fs-5"></i>
+            <span
+              class="badge bg-danger rounded-circle position-absolute top-0 end-0 translate-middle mt-n2 me-n2"
+              style="
+                font-size: 0.6em;
+                width: 18px;
+                height: 18px;
+                line-height: 1;
+              "
+              id="notif-badge"
+              >0</span
+            >
+            <!-- Changé 3 → 0 -->
+          </a>
 
           <!-- Boîte de notifications (dropdown) -->
           <div id="notif-box" class="notification-dropdown">
             <div class="notification-header">
               <h6 class="mb-0">
-Notifications <span class="badge bg-primary ms-2" id="notif-count">0</span>  <!-- Ajout ID + changé 3 → 0 -->              </h6>
-             <button type="button" class="btn-close btn-close-white" id="close-notif" aria-label="Fermer"></button>
+                Notifications
+                <span class="badge bg-primary ms-2" id="notif-count">0</span>
+                <!-- Ajout ID + changé 3 → 0 -->
+              </h6>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                id="close-notif"
+                aria-label="Fermer"
+              ></button>
             </div>
-<div class="notification-list" id="notif-list">
-                <!-- Les notifications seront injectées ici dynamiquement par JS -->
-      <div class="loading-notif text-center py-3">
-        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-        <small class="d-block text-muted mt-1">Chargement...</small>
-      </div>
-               
-              
-              
-              
+            <div class="notification-list" id="notif-list">
+              <!-- Les notifications seront injectées ici dynamiquement par JS -->
+              <div class="loading-notif text-center py-3">
+                <div
+                  class="spinner-border spinner-border-sm text-primary"
+                  role="status"
+                ></div>
+                <small class="d-block text-muted mt-1">Chargement...</small>
+              </div>
             </div>
             <div class="notification-footer">
-             <a href="#participation" class="text-center d-block py-2 text-muted small">Voir toutes les opportunités</a>
-             
+              <a
+                href="#participation"
+                class="text-center d-block py-2 text-muted small"
+                >Voir toutes les opportunités</a
+              >
             </div>
           </div>
         </div>
       </div>
-    <!-- FIN du div conteneur principal -->
-  </header>
-  <main class="main">
-    <!-- Hero Section -->
-    <section id="hero" class="hero section">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row align-items-center">
-          <div class="col-lg-6 order-2 order-lg-1" data-aos="fade-right" data-aos-delay="200">
-            <div class="hero-content">
-              <h1 class="hero-title">
-                Participez à la résolution des problèmes locaux
-              </h1>
-              <p class="hero-description">
-                EcoSolve est une plateforme collaborative qui permet aux
-                citoyens de signaler des problèmes urbains comme la
-                pollution,les déchets, de les visualiser sur une carte
-                interactive et de s'impliquer dans leur résolution pour des
-                villes plus durables.
-              </p>
-              <div class="hero-actions">
-                <a href="#signalement" class="btn-primary">Signaler un Problème</a>
-                <span>
-                  <a href="#participation" class="bi bi-play-circle">Trouver une opportunité</a>
-                </span>
-              </div>
-              <div class="hero-stats">
-                <div class="stat-item">
-                  <span class="stat-number">500+</span>
-                  <span class="stat-label">Problèmes Signalés</span>
+      <!-- FIN du div conteneur principal -->
+    </header>
+    <main class="main">
+      <!-- Hero Section -->
+      <section id="hero" class="hero section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row align-items-center">
+            <div
+              class="col-lg-6 order-2 order-lg-1"
+              data-aos="fade-right"
+              data-aos-delay="200"
+            >
+              <div class="hero-content">
+                <h1 class="hero-title">
+                  Participez à la résolution des problèmes locaux
+                </h1>
+                <p class="hero-description">
+                  EcoSolve est une plateforme collaborative qui permet aux
+                  citoyens de signaler des problèmes urbains comme la
+                  pollution,les déchets, de les visualiser sur une carte
+                  interactive et de s'impliquer dans leur résolution pour des
+                  villes plus durables.
+                </p>
+                <div class="hero-actions">
+                  <a href="#signalement" class="btn-primary"
+                    >Signaler un Problème</a
+                  >
+                  <span>
+                    <a href="#participation" class="bi bi-play-circle"
+                      >Trouver une opportunité</a
+                    >
+                  </span>
                 </div>
-                <div class="stat-item">
-                  <span class="stat-number">85%</span>
-                  <span class="stat-label">Résolus</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">24/7</span>
-                  <span class="stat-label">Ouvert à Tous</span>
+                <div class="hero-stats">
+                  <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Problèmes Signalés</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">85%</span>
+                    <span class="stat-label">Résolus</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Ouvert à Tous</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
             <div
               class="col-lg-6 order-1 order-lg-2"
@@ -1180,6 +1218,9 @@ Notifications <span class="badge bg-primary ms-2" id="notif-count">0</span>  <!-
               Rejoins des actions locales pour protéger l’environnement et
               améliorer ton quartier.
             </p>
+            <div id="opportunities-container" class="row gy-4">
+              <!-- Opportunities will be loaded here via JS -->
+            </div>
           </div>
         </div>
       </section>
@@ -1407,8 +1448,10 @@ Notifications <span class="badge bg-primary ms-2" id="notif-count">0</span>  <!-
     <!-- Location Selector Script -->
     <script src="assets/js/location-selector.js"></script>
 
+    <!-- Event loader script -->
+    <script src="assets/js/events.js"></script>
+
     <!-- Script pour la notification dropdown -->
-    
 
     <!-- Script simple pour initialiser une carte Leaflet (exemple dans hero ou features) -->
     <script>
