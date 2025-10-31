@@ -1,0 +1,98 @@
+.participation {
+  padding: 60px 0;
+}
+
+.participation .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.participation .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+}
+
+.participation .card-body {
+  padding: 1.5rem;
+}
+
+.participation .card-category {
+  margin-bottom: 1rem;
+}
+
+.participation .card-category .badge {
+  font-size: 0.8rem;
+  padding: 0.5em 1em;
+  font-weight: 500;
+}
+
+.participation .card-title {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.participation .card-text {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.participation .event-details {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.participation .event-details i {
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+}
+
+.participation .location,
+.participation .date {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.participation .btn-primary {
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.participation .btn-primary i {
+  margin-right: 0.5rem;
+}
+
+.participation .btn-outline-primary {
+  padding: 0.75rem 2rem;
+  font-weight: 500;
+}
+
+#loading-events {
+  padding: 3rem 0;
+}
+
+.participation .alert {
+  text-align: center;
+  padding: 2rem;
+  margin: 1rem 0;
+  border: none;
+  border-radius: 10px;
+}
+
+.participation .alert i {
+  font-size: 1.2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
