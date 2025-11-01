@@ -19,7 +19,9 @@ function loadEvents() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success && data.events) {
-        displayEvents(data.events);
+        // Take only the first 4 events
+        const limitedEvents = data.events.slice(0, 4);
+        displayEvents(limitedEvents);
       } else {
         throw new Error(data.error || "Failed to load events");
       }
@@ -48,7 +50,7 @@ function displayEvents(events) {
     return;
   }
 
-  // Get at least 4 events
+  // Get max 4 events
   const minEvents = 4;
   while (events.length < minEvents) {
     const lastEvent = events[events.length - 1];
