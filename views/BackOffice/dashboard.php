@@ -16,45 +16,75 @@
             color: white;
             text-align: center;
             padding: 20px 0;
-            font-size: 24px;
+            font-size: 28px;
         }
 
         .container {
             width: 80%;
-            margin: 50px auto;
+            margin: 40px auto;
             display: flex;
             justify-content: space-around;
-            flex-wrap: wrap;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .card {
             background-color: white;
             width: 250px;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 30px 20px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            text-decoration: none;
-            color: #001219;
-            font-size: 18px;
-            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .card h3 {
+            color: #0a9396;
+            margin-bottom: 15px;
+        }
+
+        .card a {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 6px;
             background-color: #0a9396;
             color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card a:hover {
+            background-color: #94d2bd;
+            color: #001219;
         }
     </style>
 </head>
 <body>
 
-<header>Tableau de bord Admin</header>
-
+<header>Tableau de bord Admin - EcoSolveit</header>
 <div class="container">
-    <a href="categories.php" class="card">🗂 Gestion des Catégories</a>
-    <a href="users.php" class="card">👥 Gestion des Utilisateurs</a>
-    <a href="opportunites.php" class="card">🎯 Gestion des Opportunités</a>
+    <div class="card">
+        <h3>Catégories</h3>
+        <p>Gérer toutes les catégories du site</p>
+        <a href="categories.php">Accéder</a>
+    </div>
+
+    <div class="card">
+        <h3>Utilisateurs</h3>
+        <p>Gérer les utilisateurs et leurs droits</p>
+        <a href="user.php">Accéder</a>
+    </div>
+
+    <div class="card">
+        <h3>Opportunités</h3>
+        <p>Gérer toutes les opportunités disponibles</p>
+        <a href="Opportunities.php">Accéder</a>
+    </div>
 </div>
 
 </body>

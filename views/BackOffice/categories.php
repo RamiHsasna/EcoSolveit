@@ -4,22 +4,43 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/EcoSolveit/models/Category.php';
 
 $categoryC = new CategoryC();
 
-// Ajout d'une catégorie
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["ajouter"])) {
-    $category_name = $_POST["category_name"];
-    $description = $_POST["description"];
-    $categoryC->ajouterCategory(new Category(null, $category_name, $description));
-    header("Location: categories.php"); exit();
-}
-
-// Suppression
-if (isset($_GET["delete"])) {
-    $categoryC->supprimerCategory((int)$_GET["delete"]);
-    header("Location: categories.php"); exit();
-}
-
 // Liste des catégories
 $categories = $categoryC->afficherCategories();
+
+// Supprimer une catégorie
+if (isset($_GET["delete"])) {
+    $categoryC->supprimerCategory((int)$_GET["delete"]);
+    header("Location: categories.php");
+    exit();
+}
+
+// Modifier une catégorie
+$editCat = null;
+if (isset($_GET['edit'])) {
+    $id = (int)$_GET['edit'];
+    foreach ($categories as $cat) {
+        if ($cat->getId() === $id) {
+            $editCat = $cat;
+            break;
+        }
+    }
+}
+
+// Ajouter ou modifier après soumission
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST["ajouter"])) {
+        $category_name = $_POST["category_name"];
+        $description = $_POST["description"];
+        $categoryC->ajouterCategory(new Category(null, $category_name, $description));
+    } elseif (isset($_POST["modifier"])) {
+        $id = (int)$_POST["id"];
+        $category_name = $_POST["category_name"];
+        $description = $_POST["description"];
+        $categoryC->modifierCategory(new Category($id, $category_name, $description));
+    }
+    header("Location: categories.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +49,6 @@ $categories = $categoryC->afficherCategories();
     <meta charset="UTF-8">
     <title>Gestion des Catégories</title>
     <style>
-        /* Styles similaires au dashboard, tableau propre */
         body { font-family:'Segoe UI'; background:#f5f7fa; }
         header { background:#005f73; color:white; text-align:center; padding:20px 0; font-size:24px; }
         .container { width:80%; margin:30px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
@@ -41,6 +61,8 @@ $categories = $categoryC->afficherCategories();
         th { background:#0a9396; color:white; }
         a.delete-btn { background:#ae2012; color:white; padding:5px 10px; border-radius:5px; text-decoration:none; }
         a.delete-btn:hover { background:#9b2226; }
+        a.modify-btn { background:#005f73; color:white; padding:5px 10px; border-radius:5px; text-decoration:none; margin-right:5px; }
+        a.modify-btn:hover { background:#0a9396; }
         .back-btn { display:inline-block; margin-bottom:20px; background:#005f73; color:white; padding:8px 14px; border-radius:5px; text-decoration:none; }
         .back-btn:hover { background:#0a9396; }
     </style>
@@ -52,11 +74,14 @@ $categories = $categoryC->afficherCategories();
 <div class="container">
     <a href="dashboard.php" class="back-btn">⬅ Retour au tableau de bord</a>
 
-    <h2>Ajouter une catégorie</h2>
+    <h2><?= $editCat ? "Modifier la catégorie" : "Ajouter une catégorie" ?></h2>
     <form method="POST">
-        <input type="text" name="category_name" placeholder="Nom de la catégorie" required>
-        <textarea name="description" placeholder="Description..." required></textarea>
-        <button type="submit" name="ajouter">Ajouter</button>
+        <input type="hidden" name="id" value="<?= $editCat ? $editCat->getId() : '' ?>">
+        <input type="text" name="category_name" placeholder="Nom de la catégorie" required value="<?= $editCat ? htmlspecialchars($editCat->getCategoryName()) : '' ?>">
+        <textarea name="description" placeholder="Description..." required><?= $editCat ? htmlspecialchars($editCat->getDescription()) : '' ?></textarea>
+        <button type="submit" name="<?= $editCat ? 'modifier' : 'ajouter' ?>">
+            <?= $editCat ? 'Modifier' : 'Ajouter' ?>
+        </button>
     </form>
 
     <h2>Liste des catégories</h2>
@@ -70,6 +95,7 @@ $categories = $categoryC->afficherCategories();
             <td><?= htmlspecialchars($cat->getCategoryName()) ?></td>
             <td><?= htmlspecialchars($cat->getDescription()) ?></td>
             <td>
+                <a href="categories.php?edit=<?= $cat->getId() ?>" class="modify-btn">✏ Modifier</a>
                 <a href="categories.php?delete=<?= $cat->getId() ?>" class="delete-btn" onclick="return confirm('Supprimer cette catégorie ?')">🗑 Supprimer</a>
             </td>
         </tr>
