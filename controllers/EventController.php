@@ -168,6 +168,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Create event
         $result = $controller->createEvent($event);
+        //opportunity
+        // --- Add Opportunity based on this event ---
+require_once __DIR__ . '/../models/Opportunity.php';
+require_once __DIR__ . '/OpportunityController.php';
+
+$opportunity = new Opportunity();
+$opportunity->setTitle($eventName);
+$opportunity->setDescription($event->getDescription());
+$opportunity->setVille($event->getVille());
+$opportunity->setPays($event->getPays());
+$opportunity->setCategoryId($event->getCategoryId());
+$opportunity->setEventId($result['id']);
+$opportunity->setUserId($userId);
+$opportunity->setStatus('active');
+
+$opController = new OpportunityController();
+$opController->createOpportunity($opportunity);
 // NOUVEAU : Créer notif auto
         $notif = new Notification();
         $notif->setType('event_created');

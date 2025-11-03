@@ -1,8 +1,8 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'].'/EcoSolveit/controllers/CategoryC.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/EcoSolveit/controllers/CategoryController.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/EcoSolveit/models/Category.php';
 
-$categoryC = new CategoryC();
+$categoryC = new CategoryController();
 
 // Liste des catégories
 $categories = $categoryC->afficherCategories();
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Gestion des Catégories</title>
     <style>
         body { font-family:'Segoe UI'; background:#f5f7fa; }
-        header { background:#005f73; color:white; text-align:center; padding:20px 0; font-size:24px; }
+        header { background:#0a9396; color:white; text-align:center; padding:20px 0; font-size:24px; }
         .container { width:80%; margin:30px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
         form { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
         input, textarea, button { padding:10px; border-radius:5px; border:1px solid #ccc; }
@@ -63,13 +63,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         a.delete-btn:hover { background:#9b2226; }
         a.modify-btn { background:#005f73; color:white; padding:5px 10px; border-radius:5px; text-decoration:none; margin-right:5px; }
         a.modify-btn:hover { background:#0a9396; }
-        .back-btn { display:inline-block; margin-bottom:20px; background:#005f73; color:white; padding:8px 14px; border-radius:5px; text-decoration:none; }
+        .back-btn { display:inline-block; margin-bottom:20px; background:#0a9396; color:white; padding:8px 14px; border-radius:5px; text-decoration:none; }
         .back-btn:hover { background:#0a9396; }
     </style>
 </head>
 <body>
 
-<header>🗂 Gestion des Catégories - Admin</header>
+<header> Gestion des Catégories - Admin</header>
 
 <div class="container">
     <a href="dashboard.php" class="back-btn">⬅ Retour au tableau de bord</a>

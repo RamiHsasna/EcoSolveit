@@ -2,7 +2,7 @@
 include_once $_SERVER['DOCUMENT_ROOT'].'/EcoSolveit/core/database.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/EcoSolveit/models/Category.php';
 
-class CategoryC {
+class CategoryController {
 
     public function afficherCategories(): array {
         try {
