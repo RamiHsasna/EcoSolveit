@@ -247,13 +247,12 @@
         color: #008b88;
       }
 
-      /* Bouton cloche */
       .btn-notification {
         position: relative;
         background: transparent;
         border: none;
         cursor: pointer;
-        padding: 8px;
+        padding: 12px;
         border-radius: 50%;
         transition: background-color 0.2s ease;
       }
@@ -264,6 +263,13 @@
         font-size: 24px;
         color: var(--text-primary);
       }
+/* Icône à l’intérieur */
+.btn-notification i {
+  font-size: 24px;
+  color: #00a19e;               /* vert */
+  transition: color 0.2s ease;
+}
+
 
       /* Badge */
       .btn-notification .badge {
@@ -377,7 +383,7 @@
             <div class="notification-header">
               <h6 class="mb-0">
                 Notifications
-                <span class="badge bg-primary ms-2" id="notif-count">0</span>
+<span class="badge ms-2" id="notif-count" style="background-color: #00a19e; color: #fff;">0</span>
                 <!-- Ajout ID + changé 3 → 0 -->
               </h6>
               <button
