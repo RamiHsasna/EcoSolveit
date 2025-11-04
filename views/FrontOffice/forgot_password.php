@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password - EcoSolve</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/EcoSolveit/assets/css/auth.css">
+    <link rel="stylesheet" href="http://localhost/EcoSolveit/assets/css/main.css">
 </head>
 
 <body>
@@ -31,7 +35,7 @@
             Enter your email address and we'll send you a link to reset your password.
         </p>
 
-        <form method="POST" action="index.php?action=forgot-password-submit">
+        <form method="POST" action="/EcoSolveit/controllers/UserController.php?action=forgot-password">
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
                 <input type="email" name="email" id="email" placeholder="Enter your email" required>
