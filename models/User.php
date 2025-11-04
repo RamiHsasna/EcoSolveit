@@ -1,6 +1,6 @@
 <?php
 
-namespace Models;
+namespace models;
 
 class User
 {
@@ -13,6 +13,8 @@ class User
     private string $user_type = 'user';
     private string $status = 'active';
     private ?string $created_at = null;
+    private ?string $resetToken = null;
+    private ?string $tokenExpire = null;
 
     // Getters and setters
     public function getId(): ?int
@@ -31,6 +33,15 @@ class User
     public function setUsername(string $v): void
     {
         $this->username = $v;
+    }
+
+    public function getTokenExpire(): ?string
+    {
+        return $this->tokenExpire;
+    }
+    public function setTokenExpire(?string $expire): void
+    {
+        $this->tokenExpire = $expire;
     }
 
     public function getEmail(): string
@@ -94,5 +105,14 @@ class User
     public function setCreatedAt(?string $v): void
     {
         $this->created_at = $v;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+    public function setResetToken(?string $token): void
+    {
+        $this->resetToken = $token;
     }
 }
