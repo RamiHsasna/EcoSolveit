@@ -72,6 +72,52 @@ class EventController
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
+   //update event
+// 
+public function updateEvent(EcoEvent $event)
+{
+    try {
+        $sql = "UPDATE eco_event SET 
+                    event_name = :event_name,
+                    description = :description,
+                    ville = :ville,
+                    pays = :pays,
+                    category_id = :category_id,
+                    event_date = :event_date,
+                    participant_limit = :participant_limit,
+                    status = :status
+                WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Gestion de participant_limit null
+        $participantLimit = $event->getParticipantLimit();
+        if ($participantLimit === '' || $participantLimit === null) {
+            $participantLimit = null;
+        }
+
+        $stmt->execute([
+            ':event_name'        => $event->getEventName(),
+            ':description'       => $event->getDescription(),
+            ':ville'             => $event->getVille(),
+            ':pays'              => $event->getPays(),
+            ':category_id'       => $event->getCategoryId(),
+            ':event_date'        => $event->getEventDate(),
+            ':participant_limit' => $participantLimit,
+            ':status'            => $event->getStatus(),
+            ':id'                => $event->getId()
+        ]);
+
+        return true;
+
+    } catch (PDOException $e) {
+        // Lance une exception détaillée pour debugging
+        throw new Exception("Erreur lors de la mise à jour de l'événement : " . $e->getMessage());
+    }
+}
+
+
 }
 
 // Procedural POST handler so this controller file can accept form submissions directly.
@@ -168,23 +214,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Create event
         $result = $controller->createEvent($event);
-        //opportunity
-        // --- Add Opportunity based on this event ---
-require_once __DIR__ . '/../models/Opportunity.php';
-require_once __DIR__ . '/OpportunityController.php';
-
-$opportunity = new Opportunity();
-$opportunity->setTitle($eventName);
-$opportunity->setDescription($event->getDescription());
-$opportunity->setVille($event->getVille());
-$opportunity->setPays($event->getPays());
-$opportunity->setCategoryId($event->getCategoryId());
-$opportunity->setEventId($result['id']);
-$opportunity->setUserId($userId);
-$opportunity->setStatus('active');
-
-$opController = new OpportunityController();
-$opController->createOpportunity($opportunity);
 // NOUVEAU : Créer notif auto
         $notif = new Notification();
         $notif->setType('event_created');
@@ -221,7 +250,10 @@ $opController->createOpportunity($opportunity);
         }
 
         // Default redirect back to homepage
+
         header('Location: /EcoSolveit/index.html');
+            //header("Location: Opportunities.php");
+
         exit;
     } catch (Exception $e) {
         // Simple error output; in production log the error and show friendly message
