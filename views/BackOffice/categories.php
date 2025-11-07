@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/EcoSolveit/controllers/CategoryContro
 require_once $_SERVER['DOCUMENT_ROOT'] . '/EcoSolveit/models/Category.php';
 
 use Controllers\CategoryController;
+use Models\Category;
 
 $categoryC = new CategoryController();
 
@@ -16,18 +17,27 @@ $categories = $categoryC->findAll();
 // Supprimer une catégorie
 if (isset($_GET['delete'])) {
     $categoryC->delete((int)$_GET['delete']);
-    header("Location: category.php");
+    header("Location: categories.php");
     exit();
 }
 
 // Ajouter ou modifier une catégorie
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $id = $_POST['id'] ? (int)$_POST['id'] : null;
-    $categoryC->update($id, [
-        ':category_name' => $_POST['category_name'],
-        ':description' => $_POST['description']
-    ]);
-    header("Location: category.php?success=1");
+    $id = $_POST['id'] ?? null;
+
+    if ($id) {
+        // Modifier
+        $categoryC->update((int)$id, [
+            ':category_name' => $_POST['category_name'],
+            ':description' => $_POST['description']
+        ]);
+    } else {
+        // Ajouter
+        $newCategory = new Category(null, $_POST['category_name'], $_POST['description']);
+        $categoryC->create($newCategory);
+    }
+
+    header("Location: categories.php?success=1");
     exit();
 }
 ?>
@@ -40,26 +50,35 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; margin:0; padding:0; }
-    header { background: #0a9396; color: white; text-align: center; padding: 20px; font-size: 24px; }
-    .container { width: 80%; margin: 30px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    table { width: 100%; border-collapse: collapse; text-align: center; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-    th { background: #0a9396; color: white; }
-    .btn-edit { background: #0a9396; color: white; border: none; margin-right: 5px; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-    .btn-edit:hover { background: #008b88; }
-    .btn-delete { background: #ae2012; color: white; border: none; padding: 5px 10px; border-radius: 5px; text-decoration: none; }
-    .btn-delete:hover { background: #9b2226; }
-    .back-btn { display: inline-block; margin-bottom: 20px; background: #0a9396; color: white; padding: 8px 14px; border-radius: 5px; text-decoration: none; }
-    .back-btn:hover { background: #008b88; }
-    .success-message { background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; margin:0; padding:0; }
+header { background: #0a9396; color: white; text-align: center; padding: 20px; font-size: 24px; }
+.container { width: 80%; margin: 30px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+table { width: 100%; border-collapse: collapse; text-align: center; margin-top: 10px; }
+th, td { border: 1px solid #ccc; padding: 8px; }
+th { background: #0a9396; color: white; }
+.btn-edit { background: #0a9396; color: white; border: none; margin-right: 5px; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+.btn-edit:hover { background: #008b88; }
+.btn-delete { background: #ae2012; color: white; border: none; padding: 5px 10px; border-radius: 5px; text-decoration: none; }
+.btn-delete:hover { background: #9b2226; }
+.back-btn { display: inline-block; margin-bottom: 20px; background: #0a9396; color: white; padding: 8px 14px; border-radius: 5px; text-decoration: none; }
+.back-btn:hover { background: #008b88; }
+.success-message { background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 function editCategory(cat) {
+    document.getElementById('categoryModalLabel').innerText = "Modifier la catégorie";
     document.getElementById('category_id').value = cat.id;
     document.getElementById('category_name').value = cat.category_name;
     document.getElementById('category_description').value = cat.description;
+    new bootstrap.Modal(document.getElementById('categoryModal')).show();
+}
+
+function addCategory() {
+    document.getElementById('categoryModalLabel').innerText = "Ajouter une catégorie";
+    document.getElementById('category_id').value = "";
+    document.getElementById('category_name').value = "";
+    document.getElementById('category_description').value = "";
     new bootstrap.Modal(document.getElementById('categoryModal')).show();
 }
 </script>
@@ -74,7 +93,7 @@ function editCategory(cat) {
     <?php endif; ?>
 
     <!-- Bouton Ajouter catégorie -->
-    <button class="btn btn-edit mb-3" style="float:right;" data-bs-toggle="modal" data-bs-target="#categoryModal">
+    <button class="btn btn-edit mb-3" style="float:right;" onclick="addCategory()">
         <i class="bi bi-plus-lg"></i> Ajouter une catégorie
     </button>
 
@@ -103,7 +122,7 @@ function editCategory(cat) {
                         ]) ?>)'>
                         <i class="bi bi-pencil"></i> Modifier
                     </button>
-                    <a href="category.php?delete=<?= $cat->getId() ?>" class="btn-delete btn-sm"
+                    <a href="categories.php?delete=<?= $cat->getId() ?>" class="btn-delete btn-sm"
                        onclick="return confirm('Supprimer cette catégorie ?')">
                        <i class="bi bi-trash"></i> Supprimer
                     </a>
@@ -122,7 +141,7 @@ function editCategory(cat) {
     <div class="modal-content">
       <form method="POST">
         <div class="modal-header">
-          <h5 class="modal-title">Catégorie</h5>
+          <h5 class="modal-title" id="categoryModalLabel">Catégorie</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
