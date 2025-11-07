@@ -8,12 +8,11 @@ use Models\Notification;
 
 class EventController
 {
-    private $conn;
+    private PDO $db;
 
     public function __construct()
     {
-        $database = Database::getInstance();
-        $this->conn = $database->getConnection();
+        $this->db = \Database::getInstance()->getConnection();
     }
 
     public function createEvent(EcoEvent $event)
@@ -41,11 +40,11 @@ class EventController
                 :participant_limit, :status
             )";
 
-            $stmt = $this->conn->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->execute($data);
 
             return [
-                'id' => $this->conn->lastInsertId(),
+                'id' => $this->db->lastInsertId(),
                 'event' => $data
             ];
         } catch (PDOException $e) {
@@ -60,7 +59,7 @@ class EventController
                   FROM eco_event e
                   LEFT JOIN category c ON e.category_id = c.id
                   ORDER BY e.created_at DESC";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -68,60 +67,44 @@ class EventController
     public function deleteEvent($id)
     {
         $query = "DELETE FROM eco_event WHERE id = :id";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
 
-   //update event
-// 
-public function updateEvent(EcoEvent $event)
-{
-    try {
-        $sql = "UPDATE eco_event SET 
+    //update event
+    // 
+    public function updateEvent($id, $data)
+    {
+        try {
+            $sql = "UPDATE eco_event SET 
                     event_name = :event_name,
                     description = :description,
                     ville = :ville,
                     pays = :pays,
-                    category_id = :category_id,
                     event_date = :event_date,
-                    participant_limit = :participant_limit,
                     status = :status
                 WHERE id = :id";
 
-        $stmt = $this->conn->prepare($sql);
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':event_name', $data[':event_name']);
+            $stmt->bindParam(':description', $data['description']);
+            $stmt->bindParam(':ville', $data['ville']);
+            $stmt->bindParam(':pays', $data['pays']);
+            $stmt->bindParam(':event_date', $data['event_date']);
+            $stmt->bindParam(':status', $data['status']);
+            $stmt->bindParam(':id', $id);
 
-        // Gestion de participant_limit null
-        $participantLimit = $event->getParticipantLimit();
-        if ($participantLimit === '' || $participantLimit === null) {
-            $participantLimit = null;
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            // Lance une exception détaillée pour debugging
+            throw new Exception("Erreur lors de la mise à jour de l'événement : " . $e->getMessage());
         }
-
-        $stmt->execute([
-            ':event_name'        => $event->getEventName(),
-            ':description'       => $event->getDescription(),
-            ':ville'             => $event->getVille(),
-            ':pays'              => $event->getPays(),
-            ':category_id'       => $event->getCategoryId(),
-            ':event_date'        => $event->getEventDate(),
-            ':participant_limit' => $participantLimit,
-            ':status'            => $event->getStatus(),
-            ':id'                => $event->getId()
-        ]);
-
-        return true;
-
-    } catch (PDOException $e) {
-        // Lance une exception détaillée pour debugging
-        throw new Exception("Erreur lors de la mise à jour de l'événement : " . $e->getMessage());
     }
 }
 
-
-}
-
 // Procedural POST handler so this controller file can accept form submissions directly.
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_POST['ajouter'])) {
     try {
         $controller = new EventController();
 
@@ -141,23 +124,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $event->setPays($_POST['pays'] ?? null);
 
         // category: prefer numeric category_id, otherwise try to resolve by name (categorie)
-        $conn = Database::getInstance()->getConnection();
+        $db = Database::getInstance()->getConnection();
         $categoryId = null;
         if (!empty($_POST['category_id'])) {
             $categoryId = (int)$_POST['category_id'];
         } elseif (!empty($_POST['categorie'])) {
             $cat = trim($_POST['categorie']);
             // try to find existing category by name
-            $stmt = $conn->prepare('SELECT id FROM category WHERE category_name = :name LIMIT 1');
+            $stmt = $db->prepare('SELECT id FROM category WHERE category_name = :name LIMIT 1');
             $stmt->execute([':name' => $cat]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row && isset($row['id'])) {
                 $categoryId = (int)$row['id'];
             } else {
                 // create the category to use its id
-                $ins = $conn->prepare('INSERT INTO category (category_name) VALUES (:name)');
+                $ins = $db->prepare('INSERT INTO category (category_name) VALUES (:name)');
                 $ins->execute([':name' => $cat]);
-                $categoryId = (int)$conn->lastInsertId();
+                $categoryId = (int)$db->lastInsertId();
             }
         } else {
             // fallback default category
@@ -169,13 +152,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 1;
 
         // Check if user exists
-        $stmt = $conn->prepare('SELECT id FROM users WHERE id = :user_id LIMIT 1');
+        $stmt = $db->prepare('SELECT id FROM users WHERE id = :user_id LIMIT 1');
         $stmt->execute([':user_id' => $userId]);
         $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$userRow) {
             // User doesn't exist, try to get first available user
-            $stmt = $conn->prepare('SELECT id FROM users ORDER BY id ASC LIMIT 1');
+            $stmt = $db->prepare('SELECT id FROM users ORDER BY id ASC LIMIT 1');
             $stmt->execute();
             $firstUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -183,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $userId = (int)$firstUser['id'];
             } else {
                 // No users exist, create a default user
-                $ins = $conn->prepare('INSERT INTO users (username, email, password, ville, pays, user_type) VALUES (:username, :email, :password, :ville, :pays, :user_type)');
+                $ins = $db->prepare('INSERT INTO users (username, email, password, ville, pays, user_type) VALUES (:username, :email, :password, :ville, :pays, :user_type)');
                 $ins->execute([
                     ':username' => 'default_user',
                     ':email' => 'default@ecosolve.com',
@@ -192,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':pays' => 'Unknown',
                     ':user_type' => 'user'
                 ]);
-                $userId = (int)$conn->lastInsertId();
+                $userId = (int)$db->lastInsertId();
             }
         }
 
@@ -214,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Create event
         $result = $controller->createEvent($event);
-// NOUVEAU : Créer notif auto
+        // NOUVEAU : Créer notif auto
         $notif = new Notification();
         $notif->setType('event_created');
         $notif->setUserId($userId);
@@ -232,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $localQuery = "INSERT INTO notifications (type, user_id, title, message, link, is_read) 
                            SELECT 'event_created', u.id, :title_local, :msg, :link, 0 
                            FROM users u WHERE u.ville = :ville AND u.id != :user_id LIMIT 5";
-            $localStmt = $conn->prepare($localQuery);
+            $localStmt = $db->prepare($localQuery);
             $localStmt->execute([
                 ':title_local' => "Nouvelle opportunité à {$localVille} !",
                 ':msg' => $notif->getDescription(),
@@ -252,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Default redirect back to homepage
 
         header('Location: /EcoSolveit/index.html');
-            //header("Location: Opportunities.php");
+        // header("Location: ");
 
         exit;
     } catch (Exception $e) {
@@ -262,4 +245,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-?>

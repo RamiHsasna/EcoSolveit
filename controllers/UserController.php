@@ -1,4 +1,5 @@
 <?php
+
 namespace Controllers;
 
 use Models\User;
@@ -55,8 +56,8 @@ class UserController
                 ':username' => $user->getUsername(),
                 ':email' => $user->getEmail(),
                 ':role' => $user->getRole() ?: 'user',
-                ':password' => $user->getPassword() 
-                    ? password_hash($user->getPassword(), PASSWORD_BCRYPT) 
+                ':password' => $user->getPassword()
+                    ? password_hash($user->getPassword(), PASSWORD_BCRYPT)
                     : null
             ]);
         } catch (PDOException $e) {
@@ -66,24 +67,30 @@ class UserController
     }
 
     // Modifier un utilisateur
-    public function update(User $user): bool
+    public function update($id, $data): bool
     {
-        if ($user->getId() === null) {
-            throw new InvalidArgumentException("ID requis pour modification.");
-        }
-
         try {
-            $stmt = $this->db->prepare(
-                "UPDATE users 
-                 SET username=:username, email=:email, role=:role 
-                 WHERE id=:id"
-            );
-            return $stmt->execute([
-                ':username' => $user->getUsername(),
-                ':email' => $user->getEmail(),
-                ':role' => $user->getRole() ?: 'user',
-                ':id' => $user->getId()
-            ]);
+            // Build the SQL query dynamically based on whether password is included
+            $sql = "UPDATE users SET username=:username, email=:email, role=:role";
+            if (isset($data[':password']) && $data[':password'] !== null) {
+                $sql .= ", password=:password";
+            }
+            $sql .= " WHERE id=:id";
+
+            $stmt = $this->db->prepare($sql);
+
+            // Bind the basic parameters
+            $stmt->bindParam(':username', $data[':username']);
+            $stmt->bindParam(':email', $data[':email']);
+            $stmt->bindParam(':role', $data[':role']);
+            $stmt->bindParam(':id', $id);
+
+            // Only bind password if it's included in the update
+            if (isset($data[':password']) && $data[':password'] !== null) {
+                $stmt->bindParam(':password', $data[':password']);
+            }
+
+            return $stmt->execute();
         } catch (PDOException $e) {
             error_log("Erreur modification utilisateur : " . $e->getMessage());
             return false;
@@ -121,4 +128,3 @@ class UserController
         );
     }
 }
-?>
