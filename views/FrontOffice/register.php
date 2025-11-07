@@ -44,19 +44,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) {
 
 <body>
 
-    <?php if (isset($_SESSION['error'])): ?>
-        <p style='text-align:center;margin:1rem;color:red;'><?php echo htmlspecialchars($_SESSION['error']);
-                                                            unset($_SESSION['error']); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($_SESSION['success'])): ?>
-        <p style='text-align:center;margin:1rem;color:green;'><?php echo htmlspecialchars($_SESSION['success']);
-                                                                unset($_SESSION['success']); ?></p>
-    <?php endif; ?>
 
     <!-- SIGNUP FORM -->
     <div class="container" id="signup">
         <h1 class="form-title">Register</h1>
+        <?php if (isset($_SESSION['error'])): ?>
+            <p style="color:red; text-align:center; margin-bottom:10px;">
+                <?php echo htmlspecialchars($_SESSION['error']);
+                unset($_SESSION['error']); ?>
+            </p>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['success'])): ?>
+            <p style="color:green; text-align:center; margin-bottom:10px;">
+                <?php echo htmlspecialchars($_SESSION['success']);
+                unset($_SESSION['success']); ?>
+            </p>
+        <?php endif; ?>
+
         <form method="post" action="/EcoSolveit/views/FrontOffice/register.php">
             <div class="input-group">
                 <i class="fas fa-user"></i>

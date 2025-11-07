@@ -271,7 +271,8 @@ class UserController
 }
 
 // Only for direct web access
-if (php_sapi_name() !== 'cli') {
+// Only run this when accessed directly (not included)
+if (basename($_SERVER['PHP_SELF']) === 'UserController.php') {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
