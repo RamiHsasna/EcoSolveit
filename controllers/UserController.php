@@ -33,14 +33,14 @@ class UserController
             $stmt = $this->db->query("SELECT * FROM users ORDER BY id DESC");
             $users = [];
             foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                // si 'role' est absent ou NULL, on met 'user' par défaut
-                $role = $row['role'] ?? 'user';
+                // si 'user_type' est absent ou NULL, on met 'user' par défaut
+                $user_type = $row['user_type'] ?? 'user';
 
                 $users[] = new User(
                     (int)$row['id'],
                     $row['username'],
                     $row['email'],
-                    $role,
+                    $user_type,
                     $row['password'] ?? null
                 );
             }
@@ -73,7 +73,7 @@ class UserController
     {
         try {
             // Build the SQL query dynamically based on whether password is included
-            $sql = "UPDATE users SET username=:username, email=:email, role=:role";
+            $sql = "UPDATE users SET username=:username, email=:email, user_type=:user_type";
             if (isset($data[':password']) && $data[':password'] !== null) {
                 $sql .= ", password=:password";
             }
@@ -84,7 +84,7 @@ class UserController
             // Bind the basic parameters
             $stmt->bindParam(':username', $data[':username']);
             $stmt->bindParam(':email', $data[':email']);
-            $stmt->bindParam(':role', $data[':role']);
+            $stmt->bindParam(':user_type', $data[':user_type']);
             $stmt->bindParam(':id', $id);
 
             // Only bind password if it's included in the update
@@ -150,22 +150,22 @@ class UserController
         return $user;
     }
 
-    public function update(User $user): bool
-    {
-        $stmt = $this->db->prepare('UPDATE users SET username=?, email=?, password=?, ville=?, pays=?, user_type=?, status=?, reset_token=?, token_expire=? WHERE id=?');
-        return $stmt->execute([
-            $user->getUsername(),
-            $user->getEmail(),
-            $user->getPassword(),
-            $user->getVille(),
-            $user->getPays(),
-            $user->getUserType(),
-            $user->getStatus(),
-            $user->getResetToken(),
-            $user->getTokenExpire(),
-            $user->getId()
-        ]);
-    }
+    // public function update(User $user): bool
+    // {
+    //     $stmt = $this->db->prepare('UPDATE users SET username=?, email=?, password=?, ville=?, pays=?, user_type=?, status=?, reset_token=?, token_expire=? WHERE id=?');
+    //     return $stmt->execute([
+    //         $user->getUsername(),
+    //         $user->getEmail(),
+    //         $user->getPassword(),
+    //         $user->getVille(),
+    //         $user->getPays(),
+    //         $user->getUserType(),
+    //         $user->getStatus(),
+    //         $user->getResetToken(),
+    //         $user->getTokenExpire(),
+    //         $user->getId()
+    //     ]);
+    // }
 
     // ========== PASSWORD RESET ==========
 
@@ -180,7 +180,7 @@ class UserController
         $user->setResetToken($token);
         $user->setTokenExpire($expire);
 
-        return $this->update($user) ? $token : null;
+        return $this->update($user->getId(), $user) ? $token : null;
     }
 
     public function verifyResetToken(string $token): ?User
@@ -201,7 +201,7 @@ class UserController
         $user->setResetToken(null);
         $user->setTokenExpire(null);
 
-        return $this->update($user);
+        return $this->update($user->getId(), $user);
     }
 
     public function emailExists(string $email): bool

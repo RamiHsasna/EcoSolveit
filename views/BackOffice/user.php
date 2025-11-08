@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     $updateData = [
         ':username' => $_POST['username'],
         ':email' => $_POST['email'],
-        ':role' => $_POST['role']
+        ':user_type' => $_POST['type']
     ];
 
     // Only include password in update if it's not empty
@@ -159,7 +159,7 @@ if (isset($_GET['delete'])) {
             document.getElementById('user_id').value = user.id;
             document.getElementById('username').value = user.username;
             document.getElementById('email').value = user.email;
-            document.getElementById('role').value = user.role;
+            document.getElementById('type').value = user.type;
             document.getElementById('password').value = '';
 
             // Show the modal
@@ -191,7 +191,7 @@ if (isset($_GET['delete'])) {
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Email</th>
-                <th>Rôle</th>
+                <th>Type</th>
                 <th>Actions</th>
             </tr>
             <?php foreach ($users as $u): ?>
@@ -199,13 +199,13 @@ if (isset($_GET['delete'])) {
                     <td><?= $u->getId() ?></td>
                     <td><?= htmlspecialchars($u->getUsername()) ?></td>
                     <td><?= htmlspecialchars($u->getEmail()) ?></td>
-                    <td><?= htmlspecialchars($u->getRole()) ?></td>
+                    <td><?= htmlspecialchars($u->getUserType()) ?></td>
                     <td>
                         <button class="btn btn-sm btn-edit" onclick='editUser(<?= json_encode([
                                                                                     "id" => $u->getId(),
                                                                                     "username" => $u->getUsername(),
                                                                                     "email" => $u->getEmail(),
-                                                                                    "role" => $u->getRole()
+                                                                                    "type" => $u->getUserType()
                                                                                 ]) ?>)'>
                             <i class="bi bi-pencil"></i> Modifier
                         </button>
@@ -243,8 +243,8 @@ if (isset($_GET['delete'])) {
                         </div>
 
                         <div class="mb-3">
-                            <label for="role" class="form-label">Rôle</label>
-                            <select class="form-control" id="role" name="role" required>
+                            <label for="type" class="form-label">Type</label>
+                            <select class="form-control" id="type" name="type" required>
                                 <option value="user">Utilisateur</option>
                                 <option value="admin">Administrateur</option>
                             </select>

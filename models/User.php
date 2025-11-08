@@ -4,17 +4,26 @@ namespace models;
 
 class User
 {
-    private ?int $id;
-    private string $username;
-    private string $email;
-    private string $password;
-    private string $ville;
-    private string $pays;
+    private ?int $id = null;
+    private string $username = '';
+    private string $email = '';
+    private string $password = '';
+    private string $ville = '';
+    private string $pays = '';
     private string $user_type = 'user';
     private string $status = 'active';
     private ?string $created_at = null;
     private ?string $resetToken = null;
     private ?string $tokenExpire = null;
+
+    public function __construct(?int $id = null, string $username = '', string $email = '', string $user_type = 'user', ?string $password = null)
+    {
+        $this->id = $id;
+        $this->username = $username;
+        $this->email = $email;
+        $this->user_type = $user_type;
+        $this->password = $password ?? '';
+    }
 
     // Getters and setters
     public function getId(): ?int
