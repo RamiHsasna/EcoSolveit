@@ -1,0 +1,1 @@
+<?php require_once 'controllers/EventController.php'; $c = new EventController(); var_dump($c->getCategories()); ?>

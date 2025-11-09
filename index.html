@@ -247,13 +247,12 @@
         color: #008b88;
       }
 
-      /* Bouton cloche */
       .btn-notification {
         position: relative;
         background: transparent;
         border: none;
         cursor: pointer;
-        padding: 8px;
+        padding: 12px;
         border-radius: 50%;
         transition: background-color 0.2s ease;
       }
@@ -264,6 +263,13 @@
         font-size: 24px;
         color: var(--text-primary);
       }
+/* Icône à l’intérieur */
+.btn-notification i {
+  font-size: 24px;
+  color: #00a19e;               /* vert */
+  transition: color 0.2s ease;
+}
+
 
       /* Badge */
       .btn-notification .badge {
@@ -308,6 +314,21 @@
           width: 40px;
           height: 40px;
         }
+      }
+      .btn-donation {
+        padding: 12px 28px;
+        border-radius: 6px;
+        background-color: #0a9396;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.3s;
+        margin-left: 10px; /* <-- this adds space between buttons */
+      }
+
+      .btn-donation:hover {
+        background-color: #94d2bd;
+        color: #001219;
       }
     </style>
   </head>
@@ -377,7 +398,7 @@
             <div class="notification-header">
               <h6 class="mb-0">
                 Notifications
-                <span class="badge bg-primary ms-2" id="notif-count">0</span>
+<span class="badge ms-2" id="notif-count" style="background-color: #00a19e; color: #fff;">0</span>
                 <!-- Ajout ID + changé 3 → 0 -->
               </h6>
               <button
@@ -437,6 +458,11 @@
                   <span>
                     <a href="#participation" class="bi bi-play-circle"
                       >Trouver une opportunité</a
+                    >
+                    <a
+                      href="views/FrontOffice/donation.php"
+                      class="btn-donation"
+                      >Faire un Don</a
                     >
                   </span>
                 </div>
@@ -1196,7 +1222,11 @@
                       >
                         Annuler
                       </button>
-                      <button type="submit" class="btn btn-primary">
+                      <button
+                        type="submit"
+                        name="ajouter"
+                        class="btn btn-primary"
+                      >
                         Envoyer le Signalement
                       </button>
                     </div>
@@ -1209,7 +1239,7 @@
       </section>
       <!-- /Signalement Section -->
 
-      <!-- OPPORTUNITY SECTION -->
+       <!-- OPPORTUNITY SECTION -->
       <section id="participation" class="participation section">
         <div class="container" data-aos="fade-up">
           <div class="section-header">
@@ -1218,12 +1248,15 @@
               Rejoins des actions locales pour protéger l’environnement et
               améliorer ton quartier.
             </p>
+<div style="margin-top: 40px;"></div> 
+
             <div id="opportunities-container" class="row gy-4">
               <!-- Opportunities will be loaded here via JS -->
             </div>
           </div>
         </div>
       </section>
+
 
       <!-- Contact Section -->
       <section id="contact" class="contact section light-background">
@@ -1388,7 +1421,7 @@
 
           <div class="col-lg-2 col-6 footer-links">
             <h4>Catégories</h4>
-            <ul>
+            <ul>  
               <li><a href="#">Pollution</a></li>
               <li><a href="#">Nids-de-poule</a></li>
               <li><a href="#">Déchets</a></li>
