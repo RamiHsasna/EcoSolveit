@@ -92,6 +92,11 @@
         <p>Gérer toutes les opportunités disponibles</p>
         <a href="Opportunities.php">Accéder</a>
     </div>
+
+    <div class="card">
+        <h3>Réclamations</h3>
+        <p>Gérer les réclamations disponibles</p>
+        <a href="reclamations.php">Accéder</a>
 </div>
 
 </body>

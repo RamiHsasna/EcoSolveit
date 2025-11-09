@@ -1,72 +1,33 @@
 <?php
-
 namespace Models;
 
-class Reclamation
-{
-    private ?int $id = null;
-    private int $user_id;
-    private string $titre;
-    private ?string $description = null;
-    private string $type;
-    private string $statut = 'pending';
-    private ?string $date_reclamation = null;
+class Reclamation {
+    private $id;
+    private $user_id;
+    private $user_name;
+    private $email;
+    private $subject;
+    private $message;
+    private $statut;
+    private $date_reclamation;
 
-    // getters/setters
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-    public function setId(?int $v): void
-    {
-        $this->id = $v;
-    }
-    public function getUserId(): int
-    {
-        return $this->user_id;
-    }
-    public function setUserId(int $v): void
-    {
-        $this->user_id = $v;
-    }
-    public function getTitre(): string
-    {
-        return $this->titre;
-    }
-    public function setTitre(string $v): void
-    {
-        $this->titre = $v;
-    }
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-    public function setDescription(?string $v): void
-    {
-        $this->description = $v;
-    }
-    public function getType(): string
-    {
-        return $this->type;
-    }
-    public function setType(string $v): void
-    {
-        $this->type = $v;
-    }
-    public function getStatut(): string
-    {
-        return $this->statut;
-    }
-    public function setStatut(string $v): void
-    {
-        $this->statut = $v;
-    }
-    public function getDateReclamation(): ?string
-    {
-        return $this->date_reclamation;
-    }
-    public function setDateReclamation(?string $v): void
-    {
-        $this->date_reclamation = $v;
-    }
+    // Setters
+    public function setId(int $v) { $this->id = $v; }
+    public function setUserId(int $v) { $this->user_id = $v; }
+    public function setUserName(string $v) { $this->user_name = $v; }
+    public function setEmail(string $v) { $this->email = $v; }         // ← à ajouter
+    public function setSubject(string $v) { $this->subject = $v; }
+    public function setMessage(string $v) { $this->message = $v; }
+    public function setStatut(string $v) { $this->statut = $v; }
+    public function setDateReclamation(string $v) { $this->date_reclamation = $v; }
+
+    // Getters
+    public function getId() { return $this->id; }
+    public function getUserId() { return $this->user_id; }
+    public function getUserName() { return $this->user_name; }
+    public function getEmail() { return $this->email; }                 // ← à ajouter
+    public function getSubject() { return $this->subject; }
+    public function getMessage() { return $this->message; }
+    public function getStatut() { return $this->statut; }
+    public function getDateReclamation() { return $this->date_reclamation; }
 }
