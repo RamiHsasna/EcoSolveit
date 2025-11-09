@@ -72,6 +72,67 @@ class EventController
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
+// Récupère tous les événements filtrés pour l'API
+public function getFilteredEvents($filters = []) {
+    $sql = "SELECT e.*, c.category_name
+            FROM eco_event e
+            LEFT JOIN category c ON e.category_id = c.id
+            WHERE 1=1";
+    $params = [];
+
+    // Filtre catégories
+    if (!empty($filters['category'])) {
+        $placeholders = implode(',', array_fill(0, count($filters['category']), '?'));
+        $sql .= " AND e.category_id IN ($placeholders)";
+        $params = array_merge($params, $filters['category']);
+    }
+
+    // Filtre ville
+    if (!empty($filters['ville'])) {
+        $placeholders = implode(',', array_fill(0, count($filters['ville']), '?'));
+        $sql .= " AND e.ville IN ($placeholders)";
+        $params = array_merge($params, $filters['ville']);
+    }
+
+    // Filtre pays
+    if (!empty($filters['pays'])) {
+        $sql .= " AND e.pays = ?";
+        $params[] = $filters['pays'];
+    }
+
+    // Filtre dates
+    if (!empty($filters['date_from'])) {
+        $sql .= " AND DATE(e.event_date) >= ?";
+        $params[] = $filters['date_from'];
+    }
+    if (!empty($filters['date_to'])) {
+        $sql .= " AND DATE(e.event_date) <= ?";
+        $params[] = $filters['date_to'];
+    }
+
+    $sql .= " ORDER BY e.event_date DESC";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Récupère toutes les catégories
+public function getCategories() {
+    $stmt = $this->conn->prepare("SELECT id, category_name FROM category ORDER BY category_name");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Récupère toutes les villes
+public function getVilles() {
+    $stmt = $this->conn->prepare("SELECT DISTINCT ville FROM eco_event ORDER BY ville");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
+
+
 }
 
 // Procedural POST handler so this controller file can accept form submissions directly.
