@@ -322,7 +322,7 @@ async function loadNotifications(silent = false) {
            style="${isUnread ? 'background-color: rgba(0,123,255,0.1);' : ''}" 
            onclick="markAsRead(${notif.id}); return false;">
           <div class="notification-icon me-3">
-            <i class="bi bi-bell text-primary fs-4"></i>
+            <i class="bi bi-bell fs-5"></i>
           </div>
           <div class="notification-content flex-grow-1">
             <h6 class="mb-1 text-truncate">${notif.title || notif.description.substring(0,30) || 'Nouvel événement'}</h6>

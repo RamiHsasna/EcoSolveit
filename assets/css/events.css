@@ -67,6 +67,7 @@
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
+  
   justify-content: center;
 }
 
@@ -80,7 +81,7 @@
 }
 
 #loading-events {
-  padding: 3rem 0;
+  padding: 3rem 0;  
 }
 
 .participation .alert {
@@ -95,4 +96,94 @@
   font-size: 1.2rem;
   vertical-align: middle;
   margin-right: 0.5rem;
+}
+/* Sidebar Filtres */
+#filter-sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.accordion-button {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    color: #333;
+    font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #e9f5ec;
+    color: #00a19e;
+}
+
+.accordion-body {
+    background-color: #f8f9fa;
+}
+
+.list-group-item {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #555;
+    flex: 1;
+}
+
+#more-categories, #more-villes {
+    font-size: 0.85rem;
+    color: #00a19e !important;
+    text-decoration: underline;
+}
+
+#more-categories:hover, #more-villes:hover {
+    color: #008080 !important;
+}
+
+/* Responsive : Collapse sidebar sur mobile */
+@media (max-width: 768px) {
+    #filter-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        z-index: 1050;
+        transition: left 0.3s ease;
+        height: 100vh;
+    }
+    
+    #filter-sidebar.show {
+        left: 0;
+    }
+    
+    /* Bouton toggle mobile (ajoute en HTML si besoin) */
+    .mobile-filter-toggle {
+        display: block;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Grille events */
+.event-container {
+    padding-left: 1rem; /* Espace après sidebar */
 }
