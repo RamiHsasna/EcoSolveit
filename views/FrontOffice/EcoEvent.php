@@ -339,7 +339,7 @@ $categories = $controller->getCategories();
         window.addEventListener('DOMContentLoaded', initializePage);
     </script>
 
-    <script src="EcoSolveit/assets/js/location-selector.js"></script>
+    <script src="../../assets/js/location-selector.js"></script>
 </body>
 
 </html>
