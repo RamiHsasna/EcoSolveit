@@ -246,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update_event"])) {
                                 <label for="status" class="form-label">Statut</label>
                                 <select class="form-control" id="status" name="status" required>
                                     <option value="pending">En attente</option>
-                                    <option value="active">Actif</option>
+                                    <option value="in_progress">Actif</option>
                                     <option value="completed">Terminé</option>
                                     <option value="cancelled">Annulé</option>
                                 </select>
