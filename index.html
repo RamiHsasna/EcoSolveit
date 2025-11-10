@@ -1167,6 +1167,19 @@
                         <!-- Categories will be loaded dynamically via JavaScript -->
                       </select>
                     </div>
+
+                    <div class="mb-3">
+                      <label for="event_date" class="form-label"
+                        >Date de l'événement</label
+                      >
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="event_date"
+                        name="event_date"
+                        required
+                      />
+                    </div>
                     <div class="mb-3">
                       <label for="pays" class="form-label">Pays</label>
                       <select
@@ -1191,6 +1204,7 @@
                         <option value="">Sélectionnez d'abord un pays</option>
                       </select>
                     </div>
+
                     <input type="hidden" name="user_id" value="1" />
                     <div class="modal-footer">
                       <button
