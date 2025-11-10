@@ -20,6 +20,12 @@ if (isset($_GET['delete'])) {
     header("Location: Reclamations.php");
     exit();
 }
+
+$statusLabels = [
+    'pending' => 'En attente',
+    'solved' => 'Corrigée',
+    'in_progress' => 'En cours',
+];
 ?>
 
 <!DOCTYPE html>
@@ -29,16 +35,86 @@ if (isset($_GET['delete'])) {
     <title>Gestion des Réclamations</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI'; background: #f5f7fa; }
-        header { background: #0a9396; color: white; text-align: center; padding: 20px 0; font-size: 24px; }
-        .container { width: 80%; margin: 30px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; text-align: center; }
-        th, td { border: 1px solid #ccc; padding: 8px; }
-        th { background: #0a9396; color: white; }
-        .back-btn { display: inline-block; margin-bottom: 20px; background: #0a9396; color: white; padding: 8px 14px; border-radius: 5px; text-decoration: none; }
-        .back-btn:hover { background: #94d2bd; color: #0a9396; }
-        select { width: 120px; padding: 5px; border-radius: 5px; border: 1px solid #ccc; }
-        .btn-delete { background: #ae2012; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; }
+        body { 
+            font-family: 'Segoe UI'; 
+            background: #f5f7fa; 
+        }
+
+        header { background: #0a9396; 
+            color: white;
+             text-align: center; 
+             padding: 20px 0; 
+             font-size: 24px; 
+            }
+            
+        .container { width: 80%; 
+            margin: 30px auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+        }
+
+        table { width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+        }
+
+        th, td { 
+            border: 1px solid #ccc; 
+            padding: 8px; 
+        }
+        th { background: #0a9396; 
+            color: white; }
+        
+        .back-btn { display: inline-block; 
+            margin-bottom: 20px; 
+            background: #0a9396; 
+            color: white; 
+            padding: 8px 14px; 
+            border-radius: 5px; 
+            text-decoration: none;
+         }
+        .back-btn:hover { background: #94d2bd; 
+            color: #0a9396; 
+        }
+
+        select { width: 120px; 
+            padding: 5px; 
+            border-radius: 5px; 
+            border: 1px solid #ccc; 
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-edit {
+            background-color: #0a9396;
+        }
+        .btn-edit:hover {
+            background-color: #94d2bd;
+            color: #001219;
+        }
+
+        .btn-status {
+            background-color: #005f73;
+        }
+        .btn-status:hover {
+            background-color: #0a9396;
+        }
+
+        .btn-delete { background: #ae2012; 
+            color: white; 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+            text-decoration: none; }
         .btn-delete:hover { background: #9b2226; }
     </style>
 </head>
@@ -58,6 +134,7 @@ if (isset($_GET['delete'])) {
             <th>Sujet</th>
             <th>Message</th>
             <th>Date</th>
+            <th>Statut</th>
             <th>Actions</th>
         </tr>
         <tbody>
@@ -70,18 +147,12 @@ if (isset($_GET['delete'])) {
                     <td><?= htmlspecialchars($r['subject']) ?></td>
                     <td><?= htmlspecialchars($r['message']) ?></td>
                     <td><?= htmlspecialchars($r['date_reclamation']) ?></td>
+                    <td><?= htmlspecialchars($statusLabels[$r['statut']] ?? $r['statut']) ?></td>
                     <td>
-                        <form method="POST">
-                            <input type="hidden" name="reclamation_id" value="<?= $r['id'] ?>">
-                            <select name="statut" onchange="this.form.submit()">
-                                <option value="pending" <?= $r['statut']=='pending'?'selected':'' ?>>En attente</option>
-                                <option value="accepte" <?= $r['statut']=='accepte'?'selected':'' ?>>Accepté</option>
-                                <option value="refuse" <?= $r['statut']=='refuse'?'selected':'' ?>>Refusé</option>
-                            </select>
-                        </form>
-                    </td>
-                    <td>
-                        <a href="?delete=<?= $r['id'] ?>" class="btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cette réclamation ?')">Supprimer</a>
+                        <a href="/EcoSolveit/controllers/ReclamationController.php?id=<?= $r['id'] ?>&status=pending" class="btn-action btn-status">En attente</a>
+                        <a href="/EcoSolveit/controllers/ReclamationController.php?id=<?= $r['id'] ?>&status=solved" class="btn-action btn-status">Corrigée</a>
+                        <a href="/EcoSolveit/controllers/ReclamationController.php?id=<?= $r['id'] ?>&status=in_progress" class="btn-action btn-status">En cours</a>
+                        <a href="/EcoSolveit/controllers/ReclamationController.php?delete=<?= $r['id'] ?>" class="btn-action btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cette réclamation ?')">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -8,14 +8,14 @@ class Reclamation {
     private $email;
     private $subject;
     private $message;
-    private $statut;
+    private $statut = 'pending';
     private $date_reclamation;
 
     // Setters
     public function setId(int $v) { $this->id = $v; }
     public function setUserId(int $v) { $this->user_id = $v; }
     public function setUserName(string $v) { $this->user_name = $v; }
-    public function setEmail(string $v) { $this->email = $v; }         // ← à ajouter
+    public function setEmail(string $v) { $this->email = $v; }         
     public function setSubject(string $v) { $this->subject = $v; }
     public function setMessage(string $v) { $this->message = $v; }
     public function setStatut(string $v) { $this->statut = $v; }
@@ -25,7 +25,7 @@ class Reclamation {
     public function getId() { return $this->id; }
     public function getUserId() { return $this->user_id; }
     public function getUserName() { return $this->user_name; }
-    public function getEmail() { return $this->email; }                 // ← à ajouter
+    public function getEmail() { return $this->email; }                 
     public function getSubject() { return $this->subject; }
     public function getMessage() { return $this->message; }
     public function getStatut() { return $this->statut; }

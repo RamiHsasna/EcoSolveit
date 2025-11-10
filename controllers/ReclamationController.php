@@ -74,19 +74,17 @@ class ReclamationController
     }
 
     public function editReclamationStatus(int $id, string $newStatus)
-{
-    try {
-        $sql = "UPDATE reclamation SET statut = :statut WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':statut', $newStatus, PDO::PARAM_STR);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
-    } catch (PDOException $e) {
-        throw new Exception("Database error: " . $e->getMessage());
+    {
+        try {
+            $sql = "UPDATE reclamation SET statut = :statut WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':statut', $newStatus, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Database error: " . $e->getMessage());
+        }
     }
-}
-
-
 
     public function deleteReclamation(int $id)
     { 
@@ -100,7 +98,24 @@ class ReclamationController
         }
     }
 }
-    // Handle form submission
+
+// Handle status update from query parameters
+if (isset($_GET['id']) && isset($_GET['status'])) {
+    $id = (int)$_GET['id'];
+    $newStatus = $_GET['status'];
+
+    $controller = new ReclamationController();
+
+    try {
+        $controller->editReclamationStatus($id, $newStatus);
+        header("Location: ../views/BackOffice/reclamations.php");
+        exit();
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Make sure user is logged in
     if (!isset($_SESSION['user_id'])) {
@@ -125,4 +140,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error: " . $e->getMessage();
     }
 }
+
 
