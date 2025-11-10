@@ -228,12 +228,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update_event"])) {
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="ville" class="form-label">Ville</label>
-                                <input type="text" class="form-control" id="ville" name="ville" required>
+                                <label for="pays" class="form-label">Pays</label>
+                                <select class="form-control" id="pays" name="pays" required>
+                                    <option value="">Sélectionnez un pays</option>
+                                </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="pays" class="form-label">Pays</label>
-                                <input type="text" class="form-control" id="pays" name="pays" required>
+                                <label for="ville" class="form-label">Ville</label>
+                                <select class="form-control" id="ville" name="ville" required>
+                                    <option value="">Sélectionnez d'abord un pays</option>
+                                </select>
                             </div>
                         </div>
 
@@ -263,6 +267,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update_event"])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/location-selector.js"></script>
     <script>
         function editEvent(event) {
             // Populate the modal with event data
@@ -275,7 +280,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update_event"])) {
             document.getElementById('status').value = event.status;
 
             // Show the modal
-            new bootstrap.Modal(document.getElementById('editModal')).show();
+            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            modal.show();
         }
     </script>
 </body>
