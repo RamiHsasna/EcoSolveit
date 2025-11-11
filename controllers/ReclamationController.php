@@ -20,7 +20,7 @@ class ReclamationController
     public function createReclamation(Reclamation $reclamation)
     {
         try {
-             $data = [
+            $data = [
                 ':user_id' => $reclamation->getUserId(),
                 ':user_name' => $reclamation->getUserName(),
                 ':email' => $reclamation->getEmail(),
@@ -87,7 +87,7 @@ class ReclamationController
     }
 
     public function deleteReclamation(int $id)
-    { 
+    {
         try {
             $query = "DELETE FROM reclamation WHERE id = :id";
             $stmt = $this->conn->prepare($query);
@@ -135,10 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $result = $controller->createReclamation($reclamation);
-        echo "Votre message a été envoyé. Merci !";
+        echo "OK";
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
-
-
