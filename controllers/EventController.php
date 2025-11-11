@@ -102,71 +102,93 @@ class EventController
         }
     }
 
-// Récupère tous les événements filtrés pour l'API
-public function getFilteredEvents($filters = []) {
-    $sql = "SELECT e.*, c.category_name
+    // Récupère tous les événements filtrés pour l'API
+    public function getFilteredEvents($filters = [])
+    {
+        $sql = "SELECT e.*, c.category_name
             FROM eco_event e
             LEFT JOIN category c ON e.category_id = c.id
             WHERE 1=1";
-    $params = [];
+        $params = [];
 
-    // Filtre catégories
-    if (!empty($filters['category'])) {
-        $placeholders = implode(',', array_fill(0, count($filters['category']), '?'));
-        $sql .= " AND e.category_id IN ($placeholders)";
-        $params = array_merge($params, $filters['category']);
+        // Filtre catégories
+        if (!empty($filters['category'])) {
+            $placeholders = implode(',', array_fill(0, count($filters['category']), '?'));
+            $sql .= " AND e.category_id IN ($placeholders)";
+            $params = array_merge($params, $filters['category']);
+        }
+
+        // Filtre ville
+        if (!empty($filters['ville'])) {
+            $placeholders = implode(',', array_fill(0, count($filters['ville']), '?'));
+            $sql .= " AND e.ville IN ($placeholders)";
+            $params = array_merge($params, $filters['ville']);
+        }
+
+        // Filtre pays
+        if (!empty($filters['pays'])) {
+            $sql .= " AND e.pays = ?";
+            $params[] = $filters['pays'];
+        }
+
+        // Filtre dates
+        if (!empty($filters['date_from'])) {
+            $sql .= " AND DATE(e.event_date) >= ?";
+            $params[] = $filters['date_from'];
+        }
+        if (!empty($filters['date_to'])) {
+            $sql .= " AND DATE(e.event_date) <= ?";
+            $params[] = $filters['date_to'];
+        }
+
+        $sql .= " ORDER BY e.event_date DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Filtre ville
-    if (!empty($filters['ville'])) {
-        $placeholders = implode(',', array_fill(0, count($filters['ville']), '?'));
-        $sql .= " AND e.ville IN ($placeholders)";
-        $params = array_merge($params, $filters['ville']);
+    // Récupère toutes les catégories
+    public function getCategories()
+    {
+        $stmt = $this->db->prepare("SELECT id, category_name FROM category ORDER BY category_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Filtre pays
-    if (!empty($filters['pays'])) {
-        $sql .= " AND e.pays = ?";
-        $params[] = $filters['pays'];
+    // Récupère toutes les villes
+    public function getVilles()
+    {
+        $stmt = $this->db->prepare("SELECT DISTINCT ville FROM eco_event ORDER BY ville");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
-
-    // Filtre dates
-    if (!empty($filters['date_from'])) {
-        $sql .= " AND DATE(e.event_date) >= ?";
-        $params[] = $filters['date_from'];
-    }
-    if (!empty($filters['date_to'])) {
-        $sql .= " AND DATE(e.event_date) <= ?";
-        $params[] = $filters['date_to'];
-    }
-
-    $sql .= " ORDER BY e.event_date DESC";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-// Récupère toutes les catégories
-public function getCategories() {
-    $stmt = $this->db->prepare("SELECT id, category_name FROM category ORDER BY category_name");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-// Récupère toutes les villes
-public function getVilles() {
-    $stmt = $this->db->prepare("SELECT DISTINCT ville FROM eco_event ORDER BY ville");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
-}
-
-
 }
 
 // Procedural POST handler so this controller file can accept form submissions directly.
 if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_POST['ajouter'])) {
+    // Start session to access user authentication
+    session_start();
+
     try {
+        // First, check if user is authenticated
+        if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+            // User not logged in - return error
+            http_response_code(401);
+            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Authentication required',
+                    'redirect' => '/EcoSolveit/views/FrontOffice/login.php'
+                ]);
+            } else {
+                // Redirect to login page for HTML form submissions
+                header('Location: /EcoSolveit/views/FrontOffice/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+            }
+            exit;
+        }
+
         $controller = new EventController();
 
         // Instantiate model and populate via setters
@@ -209,35 +231,29 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_POST['ajouter'])) {
         }
         $event->setCategoryId($categoryId);
 
-        // user id: validate that user exists in users table
-        $userId = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 1;
+        // Get user id from session (authenticated user)
+        $userId = intval($_SESSION['user_id']);
 
-        // Check if user exists
+        // Verify that the session user still exists in the database
         $stmt = $db->prepare('SELECT id FROM users WHERE id = :user_id LIMIT 1');
         $stmt->execute([':user_id' => $userId]);
         $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$userRow) {
-            // User doesn't exist, try to get first available user
-            $stmt = $db->prepare('SELECT id FROM users ORDER BY id ASC LIMIT 1');
-            $stmt->execute();
-            $firstUser = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($firstUser && isset($firstUser['id'])) {
-                $userId = (int)$firstUser['id'];
-            } else {
-                // No users exist, create a default user
-                $ins = $db->prepare('INSERT INTO users (username, email, password, ville, pays, user_type) VALUES (:username, :email, :password, :ville, :pays, :user_type)');
-                $ins->execute([
-                    ':username' => 'default_user',
-                    ':email' => 'default@ecosolve.com',
-                    ':password' => password_hash('default123', PASSWORD_BCRYPT),
-                    ':ville' => 'Unknown',
-                    ':pays' => 'Unknown',
-                    ':user_type' => 'user'
+            // Session user doesn't exist in database - session is invalid
+            session_destroy();
+            http_response_code(401);
+            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Invalid session - please login again',
+                    'redirect' => '/EcoSolveit/views/FrontOffice/login.php'
                 ]);
-                $userId = (int)$db->lastInsertId();
+            } else {
+                header('Location: /EcoSolveit/views/FrontOffice/login.php');
             }
+            exit;
         }
 
         $event->setUserId($userId);

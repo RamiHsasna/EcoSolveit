@@ -1164,6 +1164,7 @@
                     action="controllers/EventController.php"
                     method="post"
                     enctype="multipart/form-data"
+                    id="signalementForm"
                   >
                     <div class="mb-3">
                       <label for="titre" class="form-label">Titre</label>
@@ -1239,7 +1240,12 @@
                       </select>
                     </div>
 
-                    <input type="hidden" name="user_id" value="1" />
+                    <input
+                      type="hidden"
+                      name="user_id"
+                      id="current_user_id"
+                      value=""
+                    />
                     <div class="modal-footer">
                       <button
                         type="button"

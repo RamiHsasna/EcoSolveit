@@ -476,8 +476,18 @@
     if (signalementModal) {
       console.log("Found signalement modal, adding event listener");
       signalementModal.addEventListener("show.bs.modal", function () {
-        console.log("Modal is opening, loading categories");
+        console.log("Modal is opening, loading categories and user session");
         loadCategories();
+        setCurrentUserId();
+      });
+
+      // Also refresh user status when modal is hidden and shown again
+      signalementModal.addEventListener("hidden.bs.modal", function () {
+        // Clear any warnings when modal is closed
+        const warningMsg = signalementModal.querySelector(".alert-warning");
+        if (warningMsg) {
+          warningMsg.remove();
+        }
       });
     } else {
       console.error(
@@ -487,6 +497,22 @@
 
     // Initialize authentication status
     checkAuthStatus();
+
+    // Add form submission validation
+    const signalementForm = document.getElementById("signalementForm");
+    if (signalementForm) {
+      signalementForm.addEventListener("submit", function (e) {
+        const userIdField = document.getElementById("current_user_id");
+        if (!userIdField || !userIdField.value) {
+          e.preventDefault();
+          alert(
+            "Vous devez être connecté pour créer un événement. Veuillez vous connecter et réessayer."
+          );
+          window.location.href = "/EcoSolveit/views/FrontOffice/login.php";
+          return false;
+        }
+      });
+    }
 
     // Also check auth status when page regains focus (useful for login in another tab)
     window.addEventListener("focus", () => {
@@ -775,3 +801,87 @@ window.debugSession = async function () {
 
   console.log("=== SESSION DEBUG COMPLETE ===");
 };
+
+// Function to set the current user ID in the signalement form
+async function setCurrentUserId() {
+  console.log("Setting current user ID in form...");
+  try {
+    const response = await fetch("/EcoSolveit/api/get_session.php");
+    const data = await response.json();
+
+    const userIdField = document.getElementById("current_user_id");
+
+    if (data.success && data.logged_in && data.user_id) {
+      // User is logged in, set their ID
+      userIdField.value = data.user_id;
+      console.log("Set user ID to:", data.user_id);
+
+      // User is logged in - ensure submit button is enabled
+      const form = userIdField.closest("form");
+      if (form) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = "Envoyer le Signalement";
+          submitBtn.onclick = null;
+        }
+
+        // Remove any existing warning
+        const existingWarning = form.querySelector(".alert-warning");
+        if (existingWarning) {
+          existingWarning.remove();
+        }
+      }
+    } else {
+      // User is not logged in, show warning and prevent form submission
+      console.warn(
+        "User is not logged in - form submission should be prevented"
+      );
+      userIdField.value = "";
+
+      // Show warning message and disable submit
+      const form = userIdField.closest("form");
+      if (form) {
+        // Disable the submit button
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML =
+            '<i class="bi bi-exclamation-triangle me-2"></i>Connexion requise';
+          submitBtn.onclick = function (e) {
+            e.preventDefault();
+            window.location.href = "/EcoSolveit/views/FrontOffice/login.php";
+          };
+        }
+
+        // Show warning message
+        const warningMsg = document.createElement("div");
+        warningMsg.className = "alert alert-warning mt-2";
+        warningMsg.innerHTML = `
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Vous devez être connecté pour créer un événement. 
+          <a href="/EcoSolveit/views/FrontOffice/login.php" class="alert-link">Se connecter maintenant</a>
+        `;
+
+        // Remove any existing warning
+        const existingWarning = form.querySelector(".alert-warning");
+        if (existingWarning) {
+          existingWarning.remove();
+        }
+
+        // Add warning after the form fields
+        const modalBody = form.closest(".modal-body");
+        if (modalBody) {
+          modalBody.appendChild(warningMsg);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error setting user ID:", error);
+    // Default to empty and show error
+    const userIdField = document.getElementById("current_user_id");
+    if (userIdField) {
+      userIdField.value = "";
+    }
+  }
+}
