@@ -20,6 +20,26 @@ class CategoryController
     }
 
     // Récupérer toutes les catégories
+    public function findAll(): array
+    {
+        try {
+            $stmt = $this->db->query("SELECT * FROM category ORDER BY id DESC");
+            $categories = [];
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                // Si description est NULL, mettre une chaîne vide
+                $description = $row['description'] ?? '';
+                $categories[] = new Category(
+                    (int)$row['id'],
+                    $row['category_name'],
+                    $description
+                );
+            }
+            return $categories;
+        } catch (PDOException $e) {
+            error_log("Erreur affichage catégories : " . $e->getMessage());
+            return [];
+        }
+    }
     public function getCategories()
     {
         $stmt = $this->db->prepare("SELECT id, category_name FROM category ORDER BY category_name");
