@@ -198,6 +198,36 @@
         background: rgba(255, 71, 87, 0.1);
       }
 
+      /* Auth button styling */
+      #auth-btn {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #auth-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 161, 158, 0.2);
+      }
+
+      #auth-btn.loading {
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      #auth-btn .loading-spinner {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
       /* Contenu */
       .notification-content {
         flex: 1;
@@ -380,7 +410,11 @@
 
         <!-- Boutons à droite (Se connecter + Notifications) -->
         <div class="d-flex align-items-center gap-4 position-relative">
-          <a class="btn-getstarted" href="views/FrontOffice/login.php">
+          <a
+            id="auth-btn"
+            class="btn-getstarted"
+            href="views/FrontOffice/login.php"
+          >
             Se connecter
           </a>
 

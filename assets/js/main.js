@@ -484,5 +484,294 @@
         "Could not find signalement modal element with ID: signalementModal"
       );
     }
+
+    // Initialize authentication status
+    checkAuthStatus();
+
+    // Also check auth status when page regains focus (useful for login in another tab)
+    window.addEventListener("focus", () => {
+      console.log("Page focused, rechecking auth status");
+      checkAuthStatus();
+    });
+
+    // Check auth status periodically (every 5 minutes)
+    setInterval(checkAuthStatus, 5 * 60 * 1000);
   });
 })();
+
+// Authentication Management Functions
+async function checkAuthStatus() {
+  console.log("Checking authentication status...");
+  try {
+    const response = await fetch("/EcoSolveit/api/get_session.php");
+
+    // Check if response is actually JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("Response is not JSON:", contentType);
+      console.error("Response status:", response.status);
+      const responseText = await response.text();
+      console.error("Response text:", responseText.substring(0, 200) + "...");
+      throw new Error("Invalid response format");
+    }
+
+    const data = await response.json();
+    console.log("Auth status received:", data);
+
+    if (data.success) {
+      updateAuthButton(data.logged_in, data);
+
+      // Store user data in localStorage if logged in
+      if (data.logged_in) {
+        localStorage.setItem("userId", data.user_id);
+        localStorage.setItem("username", data.username || "");
+        localStorage.setItem("user_type", data.user_type || "");
+      } else {
+        // Clear localStorage if not logged in
+        localStorage.removeItem("userId");
+        localStorage.removeItem("username");
+        localStorage.removeItem("user_type");
+      }
+    }
+  } catch (error) {
+    console.error("Error checking auth status:", error);
+    // Default to logged out state on error
+    updateAuthButton(false);
+  }
+}
+
+function updateAuthButton(isLoggedIn, userData = {}) {
+  const authBtn = document.getElementById("auth-btn");
+
+  if (!authBtn) {
+    console.error("Auth button not found");
+    return;
+  }
+
+  // Remove loading state
+  authBtn.classList.remove("loading");
+
+  if (isLoggedIn) {
+    // User is logged in - show logout button
+    const username = userData.username;
+
+    if (username) {
+      authBtn.innerHTML = `
+        <i class="bi bi-person-circle me-2"></i>
+        ${username}
+      `;
+      authBtn.title = "Cliquer pour se déconnecter";
+    } else {
+      authBtn.innerHTML = `
+        <i class="bi bi-box-arrow-right me-2"></i>
+        Se déconnecter
+      `;
+    }
+
+    authBtn.href = "#";
+    authBtn.onclick = function (e) {
+      e.preventDefault();
+      logout();
+    };
+
+    console.log("Updated button to logout state");
+  } else {
+    // User is not logged in - show login button
+    authBtn.innerHTML = `
+      <i class="bi bi-box-arrow-in-right me-2"></i>
+      Se connecter
+    `;
+    authBtn.href = "views/FrontOffice/login.php";
+    authBtn.onclick = null;
+    authBtn.title = "Cliquer pour se connecter";
+
+    console.log("Updated button to login state");
+  }
+}
+
+async function logout() {
+  console.log("Logging out user...");
+
+  const authBtn = document.getElementById("auth-btn");
+
+  // Show loading state
+  if (authBtn) {
+    authBtn.classList.add("loading");
+    authBtn.innerHTML = `
+      <i class="bi bi-spinner-border loading-spinner me-2"></i>
+      Déconnexion...
+    `;
+  }
+
+  try {
+    console.log("Making logout request...");
+
+    const response = await fetch("/EcoSolveit/api/logout.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Logout response status:", response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Logout request failed:", errorText);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log("Logout response data:", data);
+
+    if (data.success) {
+      console.log("Logout successful");
+
+      // Clear localStorage
+      localStorage.removeItem("userId");
+      localStorage.removeItem("username");
+      localStorage.removeItem("user_type");
+
+      // Update button state
+      updateAuthButton(false);
+
+      // Optionally show success message
+      showNotification("Déconnexion réussie", "success");
+
+      // Reload events to show public view
+      if (typeof loadEvents === "function") {
+        loadEvents();
+      }
+
+      // Reload the page to ensure clean state
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      console.error("Logout failed:", data.error);
+      showNotification("Erreur lors de la déconnexion", "error");
+      updateAuthButton(true); // Restore previous state
+    }
+  } catch (error) {
+    console.error("Error during logout:", error);
+    showNotification("Erreur lors de la déconnexion", "error");
+    updateAuthButton(true); // Restore previous state
+  }
+}
+
+// Simple notification function
+function showNotification(message, type = "info") {
+  // Create notification element
+  const notification = document.createElement("div");
+  notification.className = `alert alert-${
+    type === "success" ? "success" : type === "error" ? "danger" : "info"
+  } alert-dismissible fade show position-fixed`;
+  notification.style.cssText = `
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+  `;
+  notification.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+
+  document.body.appendChild(notification);
+
+  // Auto-remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.parentNode.removeChild(notification);
+    }
+  }, 5000);
+}
+
+// Debug function to test logout API - can be called from browser console
+window.debugLogout = async function () {
+  console.log("=== DEBUGGING LOGOUT API ===");
+
+  // Test 1: Check if the logout.php file exists
+  try {
+    console.log("Test 1: Checking if logout.php exists...");
+    const testResponse = await fetch("/EcoSolveit/api/logout.php", {
+      method: "GET", // This should return "Method not allowed" but confirm the file exists
+    });
+    console.log("GET request status:", testResponse.status);
+    const getResult = await testResponse.text();
+    console.log("GET request response:", getResult);
+  } catch (error) {
+    console.error("Error accessing logout.php:", error);
+  }
+
+  // Test 2: Try POST request
+  try {
+    console.log("Test 2: Trying POST request...");
+    const postResponse = await fetch("/EcoSolveit/api/logout.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("POST request status:", postResponse.status);
+    const postResult = await postResponse.text();
+    console.log("POST request response:", postResult);
+  } catch (error) {
+    console.error("Error with POST request:", error);
+  }
+
+  console.log("=== DEBUG COMPLETE ===");
+};
+
+// Debug function to test session API - can be called from browser console
+window.debugSession = async function () {
+  console.log("=== DEBUGGING SESSION API ===");
+
+  // Test 1: Check current URL and paths
+  console.log("Current URL:", window.location.href);
+  console.log("Current pathname:", window.location.pathname);
+
+  // Test 2: Try to access session API
+  try {
+    console.log("Testing session API...");
+    const response = await fetch("/EcoSolveit/api/get_session.php");
+    console.log("Session API status:", response.status);
+    console.log("Session API headers:", [...response.headers.entries()]);
+
+    const contentType = response.headers.get("content-type");
+    console.log("Content type:", contentType);
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      console.log("Session API response:", data);
+    } else {
+      const text = await response.text();
+      console.log("Session API response (text):", text.substring(0, 500));
+    }
+  } catch (error) {
+    console.error("Error accessing session API:", error);
+  }
+
+  // Test 3: Test alternative paths
+  const paths = [
+    "api/get_session.php",
+    "./api/get_session.php",
+    "../api/get_session.php",
+  ];
+
+  for (const path of paths) {
+    try {
+      console.log(`Testing path: ${path}`);
+      const response = await fetch(path);
+      console.log(`Path ${path} - Status: ${response.status}`);
+      if (response.status === 200) {
+        console.log(`✅ Working path found: ${path}`);
+        break;
+      }
+    } catch (error) {
+      console.log(`❌ Path ${path} failed:`, error.message);
+    }
+  }
+
+  console.log("=== SESSION DEBUG COMPLETE ===");
+};
