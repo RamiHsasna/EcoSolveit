@@ -190,8 +190,13 @@ $categories = $controller->getCategories();
 </head>
 
 <body>
+     <div style="text-align:left; margin:20px 20px 20px 40px;">
+        <a href="/ecosolveit"
+            style="padding:10px 18px; border-radius:6px; background-color:#0a9396; color:white; text-decoration:none; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+            Retour à l'accueil
+        </a>
+    </div>
     <h1>Événements Écologiques Disponibles</h1>
-
     <div class="container-main">
         <div class="filter-sidebar">
             <form id="filterForm">
