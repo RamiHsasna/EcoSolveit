@@ -54,6 +54,19 @@ class UserController
     // Ajouter un utilisateur
     public function create(User $user): User
     {
+        // Check if email domain contains "admin" to determine user type
+        $email = $user->getEmail();
+        $emailParts = explode('@', $email);
+        $domain = strtolower($emailParts[1] ?? '');
+        $isAdmin = strpos($domain, 'admin') !== false;
+
+        // Automatically set user_type based on email domain
+        if ($isAdmin) {
+            $user->setUserType('admin');
+        } else {
+            $user->setUserType('user');
+        }
+
         $stmt = $this->db->prepare('INSERT INTO users (username, email, password, ville, pays, user_type, status, reset_token, token_expire) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             $user->getUsername(),
@@ -328,10 +341,26 @@ class UserController
             if ($user && password_verify($password, $user->getPassword())) {
                 $_SESSION['user_id'] = $user->getId();
                 $_SESSION['username'] = $user->getUsername();
-                $_SESSION['user_type'] = $user->getUserType();
+                $_SESSION['email'] = $user->getEmail();
+                $_SESSION['user_type'] = $user->getUserType(); // Store database user_type
+
+                // Check if user is admin (either by database user_type or email domain)
+                $emailParts = explode('@', $user->getEmail());
+                $domain = strtolower($emailParts[1] ?? '');
+                $isAdminByEmail = strpos($domain, 'admin') !== false;
+                $isAdminByType = $user->getUserType() === 'admin';
+                $isAdmin = $isAdminByEmail || $isAdminByType;
+
+                // Set success message based on admin status
+                if ($isAdmin) {
+                    $_SESSION['success'] = 'Connexion réussie en tant qu\'administrateur. Vous avez accès au tableau de bord.';
+                } else {
+                    $_SESSION['success'] = 'Connexion réussie. Bienvenue sur EcoSolveit!';
+                }
+
                 header('Location: /EcoSolveit/index.html');
             } else {
-                $_SESSION['error'] = 'Invalid email or password';
+                $_SESSION['error'] = 'Email ou mot de passe invalide';
                 header('Location: /EcoSolveit/views/FrontOffice/login.php');
             }
             exit;

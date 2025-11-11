@@ -613,6 +613,38 @@ function updateAuthButton(isLoggedIn, userData = {}) {
 
     console.log("Updated button to login state");
   }
+
+  // Update dashboard link visibility based on admin status
+  updateDashboardLink(isLoggedIn, userData);
+}
+
+function updateDashboardLink(isLoggedIn, userData = {}) {
+  const dashboardLink = document.querySelector(
+    'a[href="views/BackOffice/dashboard.php"]'
+  );
+
+  if (dashboardLink) {
+    const dashboardLi = dashboardLink.closest("li");
+
+    // Show dashboard link only if user is logged in and is admin (based on email domain)
+    if (isLoggedIn && userData.is_admin === true) {
+      dashboardLi.style.display = "block";
+      console.log(
+        "Dashboard link shown for admin user (email domain contains 'admin')"
+      );
+    } else {
+      dashboardLi.style.display = "none";
+      if (isLoggedIn && userData.is_admin === false) {
+        console.log(
+          "Dashboard link hidden - user email domain does not contain 'admin'"
+        );
+      } else {
+        console.log("Dashboard link hidden for non-logged in user");
+      }
+    }
+  } else {
+    console.log("Dashboard link not found in navigation");
+  }
 }
 
 async function logout() {
