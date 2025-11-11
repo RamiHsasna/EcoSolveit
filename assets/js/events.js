@@ -97,9 +97,9 @@ function displayEvents(events) {
                             ${formatDate(event.event_date)}
                         </div>
                     </div>
-                    <button class="btn btn-primary mt-3" onclick="participateInEvent('${
-                      event.id
-                    }')">
+                    <button class="btn btn-primary mt-3" 
+                            onclick="participateInEvent('${event.id}')" 
+                            id="btn-event-${event.id}">
                         <i class="bi bi-person-plus-fill me-2"></i>Participer
                     </button>
                 </div>
@@ -120,8 +120,53 @@ function displayEvents(events) {
         </div>
     `;
 
+  // Check participation status for each event
+  checkParticipationStatus(events);
+
   // Initialize AOS animations for the newly added elements
   AOS.refresh();
+}
+
+function checkParticipationStatus(events) {
+  // Check if user is logged in first
+  fetch("api/get_session.php")
+    .then((response) => response.json())
+    .then((sessionData) => {
+      if (sessionData.logged_in) {
+        // User is logged in, check each event
+        events.forEach((event) => {
+          if (!event.id.toString().startsWith("placeholder-")) {
+            fetch(`api/check_participation.php?event_id=${event.id}`)
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success && data.is_participating) {
+                  updateParticipationButton(event.id, true);
+                }
+              })
+              .catch((error) => {
+                console.error(
+                  "Error checking participation for event:",
+                  event.id,
+                  error
+                );
+              });
+          }
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error checking session:", error);
+    });
+}
+
+function updateParticipationButton(eventId, isParticipating) {
+  const button = document.getElementById(`btn-event-${eventId}`);
+  if (button && isParticipating) {
+    button.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Inscrit';
+    button.classList.remove("btn-primary");
+    button.classList.add("btn-success");
+    button.disabled = true;
+  }
 }
 
 function escapeHtml(unsafe) {
@@ -145,9 +190,108 @@ function formatDate(dateString) {
 }
 
 function participateInEvent(eventId) {
-  // TODO: Implement participation logic
-  alert(
-    "Fonctionnalité de participation en cours de développement. Event ID: " +
-      eventId
+  // Check if user is logged in first
+  fetch("api/get_session.php")
+    .then((response) => response.json())
+    .then((sessionData) => {
+      if (!sessionData.logged_in) {
+        // User not logged in, redirect to login page
+        alert("Vous devez être connecté pour participer à un événement.");
+        // You can redirect to login page here
+        // window.location.href = 'views/FrontOffice/login.php';
+        return;
+      }
+
+      // User is logged in, proceed with participation
+      submitParticipation(eventId);
+    })
+    .catch((error) => {
+      console.error("Error checking session:", error);
+      alert("Une erreur est survenue. Veuillez réessayer.");
+    });
+}
+
+function submitParticipation(eventId) {
+  // Show loading state
+  const button = document.querySelector(
+    `button[onclick="participateInEvent('${eventId}')"]`
   );
+  const originalText = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML =
+    '<i class="spinner-border spinner-border-sm me-2"></i>Inscription...';
+
+  fetch("api/participate_event.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      event_id: eventId,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        // Success - update button state
+        button.innerHTML =
+          '<i class="bi bi-check-circle-fill me-2"></i>Inscrit';
+        button.classList.remove("btn-primary");
+        button.classList.add("btn-success");
+
+        // Show success message
+        showNotification("Inscription réussie !", "success");
+      } else {
+        // Handle errors
+        if (data.require_login) {
+          alert("Vous devez être connecté pour participer à un événement.");
+          // Optionally redirect to login
+          // window.location.href = 'views/FrontOffice/login.php';
+        } else {
+          // Show more detailed error for debugging
+          let errorMessage =
+            data.error || "Une erreur est survenue lors de l'inscription.";
+          if (data.debug) {
+            errorMessage += "\n\nDétail technique: " + data.debug;
+          }
+          alert(errorMessage);
+        }
+
+        // Restore button state
+        button.disabled = false;
+        button.innerHTML = originalText;
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Une erreur réseau est survenue. Veuillez réessayer.");
+
+      // Restore button state
+      button.disabled = false;
+      button.innerHTML = originalText;
+    });
+}
+
+function showNotification(message, type = "info") {
+  // Create notification element
+  const notification = document.createElement("div");
+  notification.className = `alert alert-${
+    type === "success" ? "success" : "info"
+  } alert-dismissible fade show position-fixed`;
+  notification.style.cssText =
+    "top: 20px; right: 20px; z-index: 9999; max-width: 350px;";
+  notification.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+
+  // Add to body
+  document.body.appendChild(notification);
+
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.remove();
+    }
+  }, 5000);
 }
