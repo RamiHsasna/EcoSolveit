@@ -15,7 +15,7 @@ function loadEvents() {
         </div>
     `;
 
-  fetch("api/get_events.php")
+  fetch("/EcoSolveit/api/get_events.php")
     .then((response) => response.json())
     .then((data) => {
       if (data.success && data.events) {
@@ -129,14 +129,16 @@ function displayEvents(events) {
 
 function checkParticipationStatus(events) {
   // Check if user is logged in first
-  fetch("api/get_session.php")
+  fetch("/EcoSolveit/api/get_session.php")
     .then((response) => response.json())
     .then((sessionData) => {
       if (sessionData.logged_in) {
         // User is logged in, check each event
         events.forEach((event) => {
           if (!event.id.toString().startsWith("placeholder-")) {
-            fetch(`api/check_participation.php?event_id=${event.id}`)
+            fetch(
+              `/EcoSolveit/api/check_participation.php?event_id=${event.id}`
+            )
               .then((response) => response.json())
               .then((data) => {
                 if (data.success && data.is_participating) {
@@ -191,7 +193,7 @@ function formatDate(dateString) {
 
 function participateInEvent(eventId) {
   // Check if user is logged in first
-  fetch("api/get_session.php")
+  fetch("/EcoSolveit/api/get_session.php")
     .then((response) => response.json())
     .then((sessionData) => {
       if (!sessionData.logged_in) {
@@ -221,7 +223,7 @@ function submitParticipation(eventId) {
   button.innerHTML =
     '<i class="spinner-border spinner-border-sm me-2"></i>Inscription...';
 
-  fetch("api/participate_event.php", {
+  fetch("/EcoSolveit/api/participate_event.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

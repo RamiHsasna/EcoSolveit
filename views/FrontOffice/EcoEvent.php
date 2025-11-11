@@ -144,28 +144,36 @@ $categories = $controller->getCategories();
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
         }
 
+        .card-category .badge {
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+        }
+
+        .event-details {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .event-details .location,
+        .event-details .date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-details i {
+            color: #007bff;
+        }
+
         .card-title {
-            color: #00796b;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .card-text {
-            color: #555;
-            line-height: 1.6;
-        }
-
-        .text-muted {
-            color: #777 !important;
-        }
-
-        .bi {
-            margin-right: 0.5rem;
-        }
-
-        .location-text {
-            font-weight: 500;
-            color: #00796b !important;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         /* ========== RESPONSIVE ========== */
@@ -295,26 +303,71 @@ $categories = $controller->getCategories();
                 }
                 data.events.forEach(event => {
                     const col = document.createElement('div');
-                    col.className = 'col-md-6 col-lg-4 mb-4';
+                    col.className = 'col-lg-3 col-md-6 mb-4';
                     const location = (event.ville + (event.pays ? (', ' + event.pays) : '')).trim() || 'Inconnue';
                     const event_date = event.event_date ? new Date(event.event_date).toLocaleDateString('fr-FR') : 'Date non définie';
-                    col.innerHTML = `<div class="card h-100">
+                    col.innerHTML = `<div class="card h-100" data-aos="fade-up">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">${event.event_name}</h5>
-                    <p class="card-text flex-grow-1">${event.description}</p>
-                    <div class="mt-auto">
-                        <p class="mb-1 small text-muted location-text"><i class="bi bi-geo-alt"></i> ${location}</p>
-                        <p class="mb-1 small text-muted"><i class="bi bi-calendar"></i> ${event_date}</p>
-                        <p class="mb-0 small text-muted"><i class="bi bi-tag"></i> ${event.category_name}</p>
+                    <div class="card-category mb-2">
+                        <span class="badge bg-primary">
+                            ${event.category_name || 'Autre'}
+                        </span>
                     </div>
+                    <h5 class="card-title mb-3">${event.event_name}</h5>
+                    <p class="card-text flex-grow-1">${event.description || ''}</p>
+                    <div class="event-details mt-3">
+                        <div class="location mb-2">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            ${location}
+                        </div>
+                        <div class="date mb-2">
+                            <i class="bi bi-calendar-event-fill"></i>
+                            ${event_date}
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-3" 
+                            onclick="participateInEvent('${event.id}')" 
+                            id="btn-event-${event.id}">
+                        <i class="bi bi-person-plus-fill me-2"></i>Participer
+                    </button>
                 </div>
             </div>`;
                     grid.appendChild(col);
                 });
+
+                // Check participation status for loaded events
+                checkParticipationStatus(data.events);
             } catch (err) {
                 console.error(err);
                 grid.innerHTML = '<div class="col-12"><div class="alert alert-danger text-center">Erreur lors du chargement.</div></div>';
             }
+        }
+
+        // Check participation status for each event
+        function checkParticipationStatus(events) {
+            // Check if user is logged in first
+            fetch('/EcoSolveit/api/get_session.php')
+                .then(response => response.json())
+                .then(sessionData => {
+                    if (sessionData.logged_in) {
+                        // User is logged in, check each event
+                        events.forEach(event => {
+                            fetch('/EcoSolveit/api/check_participation.php?event_id=' + event.id)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success && data.is_participating) {
+                                        updateParticipationButton(event.id, true);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error checking participation for event:', event.id, error);
+                                });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session:', error);
+                });
         }
 
         // Initialisation LocationSelector + affichage événements
@@ -340,6 +393,7 @@ $categories = $controller->getCategories();
     </script>
 
     <script src="../../assets/js/location-selector.js"></script>
+    <script src="../../assets/js/events.js"></script>
 </body>
 
 </html>
