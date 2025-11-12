@@ -278,7 +278,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_POST['ajouter'])) {
         $notif = new Notification();
         $notif->setType('event_created');
         $notif->setUserId($userId);
-        $notif->setTitle("Votre événement '{$eventName}' a été créé !");
+        $notif->setTitle("Un nouveau evenement '{$eventName}' a été créé !");
         $notif->setDescription(substr($event->getDescription() ?? '', 0, 100) . '...');
         $notif->setLink("/EcoSolveit/views/FrontOffice/event_detail.php?id=" . $result['id']);
 
