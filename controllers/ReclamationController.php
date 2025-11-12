@@ -9,12 +9,11 @@ session_start();
 
 class ReclamationController
 {
-    private $conn;
+    private PDO $db;
 
     public function __construct()
     {
-        $database = Database::getInstance();
-        $this->conn = $database->getConnection();
+        $this->db = \Database::getInstance()->getConnection();
     }
 
     public function createReclamation(Reclamation $reclamation)
@@ -36,11 +35,11 @@ class ReclamationController
                 :user_id, :user_name, :email, :subject, :message, :statut, :date_reclamation
             )";
 
-            $stmt = $this->conn->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->execute($data);
 
             return [
-                'id' => $this->conn->lastInsertId(),
+                'id' => $this->db->lastInsertId(),
                 'reclamation' => $data
             ];
         } catch (PDOException $e) {
@@ -52,7 +51,7 @@ class ReclamationController
     {
         try {
             $query = "SELECT * FROM reclamation ORDER BY date_reclamation DESC";
-            $stmt = $this->conn->prepare($query);
+            $stmt = $this->db->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -64,7 +63,7 @@ class ReclamationController
     {
         try {
             $query = "SELECT * FROM reclamation WHERE id = :id";
-            $stmt = $this->conn->prepare($query);
+            $stmt = $this->db->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -77,7 +76,7 @@ class ReclamationController
     {
         try {
             $sql = "UPDATE reclamation SET statut = :statut WHERE id = :id";
-            $stmt = $this->conn->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':statut', $newStatus, PDO::PARAM_STR);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             return $stmt->execute();
@@ -90,7 +89,7 @@ class ReclamationController
     {
         try {
             $query = "DELETE FROM reclamation WHERE id = :id";
-            $stmt = $this->conn->prepare($query);
+            $stmt = $this->db->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -108,6 +107,20 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
 
     try {
         $controller->editReclamationStatus($id, $newStatus);
+        header("Location: ../views/BackOffice/reclamations.php");
+        exit();
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
+// Handle deletion from query parameters
+if (isset($_GET['delete'])) {
+    $id = (int)$_GET['delete'];
+    $controller = new ReclamationController();
+
+    try {
+        $controller->deleteReclamation($id);
         header("Location: ../views/BackOffice/reclamations.php");
         exit();
     } catch (Exception $e) {
